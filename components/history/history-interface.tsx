@@ -255,7 +255,7 @@ export function HistoryInterface({ onBack }: HistoryInterfaceProps) {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {filteredHistory.map((entry) => {
               const { date, time } = formatDate(entry.timestamp);
               return (
@@ -263,7 +263,7 @@ export function HistoryInterface({ onBack }: HistoryInterfaceProps) {
                   key={entry.id}
                   className="hover:shadow-md transition-shadow"
                 >
-                  <CardContent className="p-6">
+                  <CardContent className="p-6 py-2">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-4 flex-1">
                         <div className="p-3 bg-muted rounded-lg">

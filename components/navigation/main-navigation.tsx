@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { authService } from "@/lib/auth";
 import Image from "next/image";
+import { NotificationCenter } from "../notifications/notification-center";
 
 interface MainNavigationProps {
   onLogout: () => void;
@@ -166,6 +167,7 @@ export function MainNavigation({
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <NotificationCenter onNavigate={onNavigate} />
             <Button
               variant="outline"
               size="sm"

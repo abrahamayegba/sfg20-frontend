@@ -33,7 +33,6 @@ interface WaitlistFormProps {
 
 export function WaitlistForm({
   source,
-  onSuccess,
   className,
 }: WaitlistFormProps) {
   const [formData, setFormData] = useState({
