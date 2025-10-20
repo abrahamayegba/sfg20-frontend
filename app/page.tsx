@@ -7,6 +7,7 @@ import { Dashboard } from "@/components/dashboard/dashboard";
 import { authService } from "@/lib/auth";
 import LandingPage from "./landing/page";
 import { useSearchParams } from "next/navigation";
+import LoadingScreen from "@/components/loading/loading";
 
 export default function HomePage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -32,8 +33,7 @@ export default function HomePage() {
       setError(err instanceof Error ? err.message : "Unknown error");
       setIsLoading(false);
     }
-  }, [searchParams]); // rerun when ?app=true changes
-
+  }, [searchParams]);
   const handleAuthSuccess = () => {
     setIsAuthenticated(true);
     setShowApp(true);
@@ -67,12 +67,13 @@ export default function HomePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
+      // <div className="min-h-screen flex items-center justify-center">
+      //   <div className="text-center">
+      //     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+      //     <p className="text-muted-foreground">Loading...</p>
+      //   </div>
+      // </div>
+      <LoadingScreen />
     );
   }
 

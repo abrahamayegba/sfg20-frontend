@@ -323,9 +323,9 @@ export function MultiStepExportInterface({
         {currentStep === 1 && (
           <Card>
             <CardHeader>
-              <CardTitle>Step 1: Configure Test Readings</CardTitle>
+              <CardTitle>Step 1: Configure Failure Points</CardTitle>
               <CardDescription>
-                Set up test readings and failure points that will be monitored
+                Set up failure points that will be monitored
                 in simPRO
               </CardDescription>
             </CardHeader>
@@ -334,7 +334,7 @@ export function MultiStepExportInterface({
               <div className="p-4 border rounded-lg space-y-4 bg-muted/30">
                 <h3 className="font-semibold flex items-center gap-2">
                   <Plus className="h-4 w-4" />
-                  Add Test Reading
+                  Add Failure Point
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -472,21 +472,20 @@ export function MultiStepExportInterface({
                   disabled={!newTestReading.name || !newTestReading.assetId}
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Test Reading
+                  Add Failure Point
                 </Button>
               </div>
 
               {/* Test Readings List */}
               <div className="space-y-3">
                 <h3 className="font-semibold">
-                  Configured Test Readings ({exportState.testReadings.length})
+                  Configured Failure Points ({exportState.testReadings.length})
                 </h3>
                 {exportState.testReadings.length === 0 ? (
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
-                      No test readings configured yet. Add at least one test
-                      reading to continue.
+                      No failure points configured yet. Add at least one failure point to continue.
                     </AlertDescription>
                   </Alert>
                 ) : (
