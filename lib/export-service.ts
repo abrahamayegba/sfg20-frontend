@@ -39,24 +39,22 @@ export interface SimproAsset {
   customFields?: Record<string, any>;
 }
 
-export interface SimproTestReading {
+export interface SimproFailurePoint {
   id: string;
-  assetId: string;
   name: string;
-  description: string;
-  readingType: "Pass/Fail" | "Numeric" | "Text";
-  expectedValue?: string;
-  unit?: string;
-  frequency: string;
-  isFailurePoint: boolean;
-  alertOnFailure: boolean;
+  severity:
+    | "Technician Chooses"
+    | "Critical"
+    | "Non-Critical"
+    | "Non-Compliant"
+    | "Non-Conformant";
 }
 
 export interface CustomField {
   id: string;
   name: string;
-  type: "text" | "number" | "date" | "boolean" | "select";
-  options?: string[]; // for select type
+  type: "text" | "date" | "list" | "barcode" | "numeric" | "hyperlink";
+  listItems?: string[]; // for list type
   required: boolean;
   defaultValue?: any;
 }
@@ -82,7 +80,7 @@ export interface MultiStepExportState {
   steps: ExportStep[];
   serviceLevels: SimproServiceLevel[];
   assets: SimproAsset[];
-  testReadings: SimproTestReading[];
+  failurePoints: SimproFailurePoint[];
   tasks: SimproTask[];
   customFields: CustomField[];
   overallStatus:
@@ -452,9 +450,9 @@ export const exportService = {
         maxRetries: 3,
       },
       {
-        id: "test-readings",
-        name: "Test Readings",
-        description: "Creating test readings and failure points",
+        id: "failure-points",
+        name: "Failure Points",
+        description: "Creating failure points in simPRO",
         status: "pending",
         progress: 0,
         retryCount: 0,
@@ -512,65 +510,30 @@ export const exportService = {
 
     // Generate assets from schedules
     const assets: SimproAsset[] = [];
-    const addedAssetIds = new Set<string>();
-
     selectionState.selectedSchedules.forEach((selectedSchedule, index) => {
-      // Only try to find the schedule once across all regimes
-      const schedule = sfg20Data.regimes
-        .flatMap((r) => r.schedules)
-        .find((s) => s.id === selectedSchedule.scheduleId);
-
-      if (schedule && !addedAssetIds.has(schedule.id)) {
-        const serviceLevel = serviceLevels.find((sl) =>
-          sl.scheduleIds.includes(schedule.id)
+      for (const regime of sfg20Data.regimes) {
+        const schedule = regime.schedules.find(
+          (s) => s.id === selectedSchedule.scheduleId
         );
-
-        assets.push({
-          id: `asset_${schedule.id}`,
-          name: schedule.rawTitle,
-          description: schedule.title,
-          assetTag: `TAG-${String(index + 1).padStart(4, "0")}`,
-          category: schedule.code || "General",
-          location: schedule.tasks[0]?.where || "Facility",
-          serviceLevelId: serviceLevel?.id || "",
-          customFields: {},
-        });
-
-        addedAssetIds.add(schedule.id);
+        if (schedule) {
+          const serviceLevel = serviceLevels.find((sl) =>
+            sl.scheduleIds.includes(schedule.id)
+          );
+          assets.push({
+            id: `asset_${schedule.id}`,
+            name: schedule.rawTitle,
+            description: schedule.title,
+            assetTag: `TAG-${String(index + 1).padStart(4, "0")}`,
+            category: schedule.code || "General",
+            location: schedule.tasks[0]?.where || "Facility",
+            serviceLevelId: serviceLevel?.id || "",
+            customFields: {},
+          });
+        }
       }
     });
 
-    // Generate test readings (failure points)
-    const testReadings: SimproTestReading[] = [];
-    const processedAssets = new Set<string>();
-    assets.forEach((asset) => {
-      if (processedAssets.has(asset.id)) return; // skip if already processed
-      processedAssets.add(asset.id);
-
-      testReadings.push({
-        id: `tr_${asset.id}_operational`,
-        assetId: asset.id,
-        name: "Operational Status",
-        description: "Check if equipment is operational",
-        readingType: "Pass/Fail",
-        expectedValue: "Pass",
-        frequency: "Monthly",
-        isFailurePoint: true,
-        alertOnFailure: true,
-      });
-
-      testReadings.push({
-        id: `tr_${asset.id}_safety`,
-        assetId: asset.id,
-        name: "Safety Check",
-        description: "Verify all safety systems are functioning",
-        readingType: "Pass/Fail",
-        expectedValue: "Pass",
-        frequency: "Monthly",
-        isFailurePoint: true,
-        alertOnFailure: true,
-      });
-    });
+    const failurePoints: SimproFailurePoint[] = [];
 
     // Generate tasks
     const tasks: SimproTask[] = [];
@@ -617,7 +580,7 @@ export const exportService = {
       steps,
       serviceLevels,
       assets,
-      testReadings,
+      failurePoints,
       tasks,
       customFields: [],
       overallStatus: "not-started",
@@ -657,8 +620,8 @@ export const exportService = {
         case "assets":
           await exportService.executeAssetsStep(exportState, step);
           break;
-        case "test-readings":
-          await exportService.executeTestReadingsStep(exportState, step);
+        case "failure-points":
+          await exportService.executeFailurePointsStep(exportState, step);
           break;
         case "tasks":
           await exportService.executeTasksStep(exportState, step);
@@ -722,10 +685,10 @@ export const exportService = {
       console.log(`[v0] Created service level: ${serviceLevel.name}`);
       step.progress = Math.round(((i + 1) / total) * 100);
 
-      // Simulate occasional failure for demo
-      if (Math.random() < 0.05 && step.retryCount === 0) {
-        throw new Error(`Failed to create service level: ${serviceLevel.name}`);
-      }
+      // // Simulate occasional failure for demo
+      // if (Math.random() < 0.01 && step.retryCount === 0) {
+      //   throw new Error(`Failed to create service level: ${serviceLevel.name}`);
+      // }
     }
 
     step.data = { created: total };
@@ -744,43 +707,40 @@ export const exportService = {
       console.log(`[v0] Created asset: ${asset.name}`);
       step.progress = Math.round(((i + 1) / total) * 100);
 
-      // Simulate occasional failure for demo
-      if (Math.random() < 0.05 && step.retryCount === 0) {
-        throw new Error(`Failed to create asset: ${asset.name}`);
-      }
+      // // Simulate occasional failure for demo
+      // if (Math.random() < 0.01 && step.retryCount === 0) {
+      //   throw new Error(`Failed to create asset: ${asset.name}`);
+      // }
     }
 
     step.data = { created: total };
   },
 
-  executeTestReadingsStep: async (
+  executeFailurePointsStep: async (
     state: MultiStepExportState,
     step: ExportStep
   ) => {
-    console.log("[v0] Creating test readings and failure points in simPRO");
+    console.log("[v0] Creating failure points in simPRO");
 
-    const total = state.testReadings.length;
+    const total = state.failurePoints.length;
     for (let i = 0; i < total; i++) {
-      const reading = state.testReadings[i];
+      const failurePoint = state.failurePoints[i];
 
-      // Simulate API call to create test reading
+      // Simulate API call to create failure point
       await new Promise((resolve) => setTimeout(resolve, 400));
 
       console.log(
-        `[v0] Created test reading: ${reading.name} for asset ${reading.assetId}`
+        `[v0] Created failure point: ${failurePoint.name} (${failurePoint.severity})`
       );
       step.progress = Math.round(((i + 1) / total) * 100);
 
-      // Simulate occasional failure for demo
-      if (Math.random() < 0.05 && step.retryCount === 0) {
-        throw new Error(`Failed to create test reading: ${reading.name}`);
-      }
+      // // Simulate occasional failure for demo
+      // if (Math.random() < 0.01 && step.retryCount === 0) {
+      //   throw new Error(`Failed to create failure point: ${failurePoint.name}`);
+      // }
     }
 
-    step.data = {
-      created: total,
-      failurePoints: state.testReadings.filter((r) => r.isFailurePoint).length,
-    };
+    step.data = { created: total };
   },
 
   executeTasksStep: async (state: MultiStepExportState, step: ExportStep) => {
@@ -797,7 +757,7 @@ export const exportService = {
       step.progress = Math.round(((i + 1) / total) * 100);
 
       // Simulate occasional failure for demo
-      if (Math.random() < 0.05 && step.retryCount === 0) {
+      if (Math.random() < 0.0001 && step.retryCount === 0) {
         throw new Error(`Failed to create task: ${task.name}`);
       }
     }
@@ -984,21 +944,25 @@ export const exportService = {
     return exportState;
   },
 
-  addTestReading: (
+  addFailurePoint: (
     exportState: MultiStepExportState,
-    reading: SimproTestReading
+    failurePoint: SimproFailurePoint
   ): MultiStepExportState => {
-    exportState.testReadings.push(reading);
-    return exportState;
+    return {
+      ...exportState,
+      failurePoints: [...exportState.failurePoints, failurePoint],
+    };
   },
 
-  removeTestReading: (
+  removeFailurePoint: (
     exportState: MultiStepExportState,
-    readingId: string
+    failurePointId: string
   ): MultiStepExportState => {
-    exportState.testReadings = exportState.testReadings.filter(
-      (r) => r.id !== readingId
-    );
-    return exportState;
+    return {
+      ...exportState,
+      failurePoints: exportState.failurePoints.filter(
+        (fp) => fp.id !== failurePointId
+      ),
+    };
   },
 };

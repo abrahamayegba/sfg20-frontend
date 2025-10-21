@@ -22,7 +22,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   ArrowLeft,
   ArrowRight,
@@ -37,13 +36,16 @@ import {
   Plus,
   Trash2,
   FileCheck,
+  X,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import {
   exportService,
   type MultiStepExportState,
   type ExportStep,
   type CustomField,
-  type SimproTestReading,
+  type SimproFailurePoint,
 } from "@/lib/export-service";
 import { initializeDemoData } from "@/lib/sfg20-data";
 
@@ -62,24 +64,23 @@ export function MultiStepExportInterface({
   const [isExporting, setIsExporting] = useState(false);
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1);
 
-  // Custom field form state
   const [newCustomField, setNewCustomField] = useState<Partial<CustomField>>({
     name: "",
     type: "text",
     required: false,
+    listItems: [],
   });
+  const [newListItem, setNewListItem] = useState("");
 
-  // Test reading form state
-  const [newTestReading, setNewTestReading] = useState<
-    Partial<SimproTestReading>
+  const [newFailurePoint, setNewFailurePoint] = useState<
+    Partial<SimproFailurePoint>
   >({
     name: "",
-    description: "",
-    readingType: "Pass/Fail",
-    frequency: "Monthly",
-    isFailurePoint: true,
-    alertOnFailure: true,
+    severity: "Technician Chooses",
   });
+
+  const [showAllFailurePoints, setShowAllFailurePoints] = useState(false);
+  const [showAllCustomFields, setShowAllCustomFields] = useState(false);
 
   useEffect(() => {
     const state = exportService.initializeMultiStepExport();
@@ -136,13 +137,19 @@ export function MultiStepExportInterface({
       name: newCustomField.name,
       type: newCustomField.type || "text",
       required: newCustomField.required || false,
-      options: newCustomField.options,
+      listItems:
+        newCustomField.type === "list" ? newCustomField.listItems : undefined,
       defaultValue: newCustomField.defaultValue,
     };
 
     const updatedState = exportService.addCustomField(exportState, field);
     setExportState(updatedState);
-    setNewCustomField({ name: "", type: "text", required: false });
+    setNewCustomField({
+      name: "",
+      type: "text",
+      required: false,
+      listItems: [],
+    });
   };
 
   const handleRemoveCustomField = (fieldId: string) => {
@@ -151,39 +158,45 @@ export function MultiStepExportInterface({
     setExportState(updatedState);
   };
 
-  const handleAddTestReading = () => {
-    if (!exportState || !newTestReading.name || !newTestReading.assetId) return;
-
-    const reading: SimproTestReading = {
-      id: `tr_${Date.now()}`,
-      assetId: newTestReading.assetId,
-      name: newTestReading.name,
-      description: newTestReading.description || "",
-      readingType: newTestReading.readingType || "Pass/Fail",
-      expectedValue: newTestReading.expectedValue,
-      unit: newTestReading.unit,
-      frequency: newTestReading.frequency || "Monthly",
-      isFailurePoint: newTestReading.isFailurePoint ?? true,
-      alertOnFailure: newTestReading.alertOnFailure ?? true,
-    };
-
-    const updatedState = exportService.addTestReading(exportState, reading);
-    setExportState(updatedState);
-    setNewTestReading({
-      name: "",
-      description: "",
-      readingType: "Pass/Fail",
-      frequency: "Monthly",
-      isFailurePoint: true,
-      alertOnFailure: true,
-    });
+  const handleAddListItem = () => {
+    if (!newListItem.trim()) return;
+    setNewCustomField((prev) => ({
+      ...prev,
+      listItems: [...(prev.listItems || []), newListItem.trim()],
+    }));
+    setNewListItem("");
   };
 
-  const handleRemoveTestReading = (readingId: string) => {
-    if (!exportState) return;
-    const updatedState = exportService.removeTestReading(
+  const handleRemoveListItem = (index: number) => {
+    setNewCustomField((prev) => ({
+      ...prev,
+      listItems: prev.listItems?.filter((_, i) => i !== index) || [],
+    }));
+  };
+
+  const handleAddFailurePoint = () => {
+    if (!exportState || !newFailurePoint.name || !newFailurePoint.severity)
+      return;
+
+    const failurePoint: SimproFailurePoint = {
+      id: `fp_${Date.now()}`,
+      name: newFailurePoint.name,
+      severity: newFailurePoint.severity as any,
+    };
+
+    const updatedState = exportService.addFailurePoint(
       exportState,
-      readingId
+      failurePoint
+    );
+    setExportState(updatedState);
+    setNewFailurePoint({ name: "", severity: "Technician Chooses" });
+  };
+
+  const handleRemoveFailurePoint = (failurePointId: string) => {
+    if (!exportState) return;
+    const updatedState = exportService.removeFailurePoint(
+      exportState,
+      failurePointId
     );
     setExportState(updatedState);
   };
@@ -196,7 +209,7 @@ export function MultiStepExportInterface({
         return Database;
       case "assets":
         return Package;
-      case "test-readings":
+      case "failure-points":
         return ClipboardCheck;
       case "tasks":
         return ListChecks;
@@ -274,7 +287,7 @@ export function MultiStepExportInterface({
         <div className="mb-8">
           <div className="flex items-center justify-between">
             {[
-              { num: 1, label: "Test Readings", icon: ClipboardCheck },
+              { num: 1, label: "Failure Points", icon: ClipboardCheck },
               { num: 2, label: "Custom Fields", icon: Plus },
               { num: 3, label: "Review", icon: FileCheck },
               { num: 4, label: "Export", icon: CheckCircle },
@@ -325,12 +338,11 @@ export function MultiStepExportInterface({
             <CardHeader>
               <CardTitle>Step 1: Configure Failure Points</CardTitle>
               <CardDescription>
-                Set up failure points that will be monitored
-                in simPRO
+                Set up failure points that will be monitored in simPRO
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Add Test Reading Form */}
+              {/* Add Failure Point Form */}
               <div className="p-4 border rounded-lg space-y-4 bg-muted/30">
                 <h3 className="font-semibold flex items-center gap-2">
                   <Plus className="h-4 w-4" />
@@ -338,12 +350,12 @@ export function MultiStepExportInterface({
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Reading Name *</Label>
+                    <Label>Failure Point Name *</Label>
                     <Input
                       placeholder="e.g., Temperature Check"
-                      value={newTestReading.name}
+                      value={newFailurePoint.name}
                       onChange={(e) =>
-                        setNewTestReading((prev) => ({
+                        setNewFailurePoint((prev) => ({
                           ...prev,
                           name: e.target.value,
                         }))
@@ -351,36 +363,13 @@ export function MultiStepExportInterface({
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Asset *</Label>
+                    <Label>Severity *</Label>
                     <Select
-                      value={newTestReading.assetId}
+                      value={newFailurePoint.severity}
                       onValueChange={(value) =>
-                        setNewTestReading((prev) => ({
+                        setNewFailurePoint((prev) => ({
                           ...prev,
-                          assetId: value,
-                        }))
-                      }
-                    >
-                      <SelectTrigger className=" w-full border border-gray-200">
-                        <SelectValue placeholder="Select asset" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {exportState.assets.map((asset) => (
-                          <SelectItem key={asset.id} value={asset.id}>
-                            {asset.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Reading Type</Label>
-                    <Select
-                      value={newTestReading.readingType}
-                      onValueChange={(value) =>
-                        setNewTestReading((prev) => ({
-                          ...prev,
-                          readingType: value as any,
+                          severity: value as any,
                         }))
                       }
                     >
@@ -388,146 +377,106 @@ export function MultiStepExportInterface({
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Pass/Fail">Pass/Fail</SelectItem>
-                        <SelectItem value="Numeric">Numeric</SelectItem>
-                        <SelectItem value="Text">Text</SelectItem>
+                        <SelectItem value="Technician Chooses">
+                          Technician Chooses
+                        </SelectItem>
+                        <SelectItem value="Critical">Critical</SelectItem>
+                        <SelectItem value="Non-Critical">
+                          Non-Critical
+                        </SelectItem>
+                        <SelectItem value="Non-Compliant">
+                          Non-Compliant
+                        </SelectItem>
+                        <SelectItem value="Non-Conformant">
+                          Non-Conformant
+                        </SelectItem>
                       </SelectContent>
                     </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Frequency</Label>
-                    <Select
-                      value={newTestReading.frequency}
-                      onValueChange={(value) =>
-                        setNewTestReading((prev) => ({
-                          ...prev,
-                          frequency: value,
-                        }))
-                      }
-                    >
-                      <SelectTrigger className=" w-full border border-gray-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Daily">Daily</SelectItem>
-                        <SelectItem value="Weekly">Weekly</SelectItem>
-                        <SelectItem value="Monthly">Monthly</SelectItem>
-                        <SelectItem value="Quarterly">Quarterly</SelectItem>
-                        <SelectItem value="Annually">Annually</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2 md:col-span-2">
-                    <Label>Description</Label>
-                    <Input
-                      placeholder="Optional description"
-                      value={newTestReading.description}
-                      onChange={(e) =>
-                        setNewTestReading((prev) => ({
-                          ...prev,
-                          description: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="isFailurePoint"
-                      checked={newTestReading.isFailurePoint}
-                      onCheckedChange={(checked) =>
-                        setNewTestReading((prev) => ({
-                          ...prev,
-                          isFailurePoint: checked as boolean,
-                        }))
-                      }
-                    />
-                    <Label
-                      htmlFor="isFailurePoint"
-                      className="font-normal cursor-pointer"
-                    >
-                      Mark as failure point
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="alertOnFailure"
-                      checked={newTestReading.alertOnFailure}
-                      onCheckedChange={(checked) =>
-                        setNewTestReading((prev) => ({
-                          ...prev,
-                          alertOnFailure: checked as boolean,
-                        }))
-                      }
-                    />
-                    <Label
-                      htmlFor="alertOnFailure"
-                      className="font-normal cursor-pointer"
-                    >
-                      Send alert on failure
-                    </Label>
                   </div>
                 </div>
                 <Button
-                  onClick={handleAddTestReading}
-                  disabled={!newTestReading.name || !newTestReading.assetId}
+                  onClick={handleAddFailurePoint}
+                  disabled={!newFailurePoint.name}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Failure Point
                 </Button>
               </div>
 
-              {/* Test Readings List */}
+              {/* Failure Points List with Collapsible */}
               <div className="space-y-3">
                 <h3 className="font-semibold">
-                  Configured Failure Points ({exportState.testReadings.length})
+                  Configured Failure Points ({exportState.failurePoints.length})
                 </h3>
-                {exportState.testReadings.length === 0 ? (
+                {exportState.failurePoints.length === 0 ? (
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
-                      No failure points configured yet. Add at least one failure point to continue.
+                      No failure points configured yet. Add at least one failure
+                      point to continue.
                     </AlertDescription>
                   </Alert>
                 ) : (
-                  <div className="space-y-2">
-                    {exportState.testReadings.map((reading) => {
-                      const asset = exportState.assets.find(
-                        (a) => a.id === reading.assetId
-                      );
-                      return (
-                        <div
-                          key={reading.id}
-                          className="flex items-center justify-between p-3 border rounded-lg"
-                        >
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <div className="font-medium">{reading.name}</div>
-                              {reading.isFailurePoint && (
+                  <>
+                    <div className="space-y-2">
+                      {exportState.failurePoints
+                        .slice(0, showAllFailurePoints ? undefined : 5)
+                        .map((failurePoint) => (
+                          <div
+                            key={failurePoint.id}
+                            className="flex items-center justify-between p-3 border border-l-4 border-l-red-500 rounded-lg bg-red-50/50"
+                          >
+                            <div className="flex-1">
+                              <div className="font-medium flex items-center gap-2">
+                                {failurePoint.name}
                                 <Badge
                                   variant="destructive"
                                   className="text-xs"
                                 >
                                   Failure Point
                                 </Badge>
-                              )}
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                Severity: {failurePoint.severity}
+                              </div>
                             </div>
-                            <div className="text-sm text-muted-foreground">
-                              Asset: {asset?.name || "Unknown"} •{" "}
-                              {reading.readingType} • {reading.frequency}
-                            </div>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() =>
+                                handleRemoveFailurePoint(failurePoint.id)
+                              }
+                              className="hover:bg-destructive/10 hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
                           </div>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleRemoveTestReading(reading.id)}
-                            className="hover:bg-destructive/10 hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        ))}
+                    </div>
+                    {exportState.failurePoints.length > 5 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          setShowAllFailurePoints(!showAllFailurePoints)
+                        }
+                        className="w-full"
+                      >
+                        {showAllFailurePoints ? (
+                          <>
+                            <ChevronUp className="h-4 w-4 mr-2" />
+                            Show Less
+                          </>
+                        ) : (
+                          <>
+                            <ChevronDown className="h-4 w-4 mr-2" />
+                            Show All {exportState.failurePoints.length} Failure
+                            Points
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -564,7 +513,7 @@ export function MultiStepExportInterface({
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Field Name</Label>
+                    <Label>Field Name *</Label>
                     <Input
                       placeholder="e.g., Warranty Expiry"
                       value={newCustomField.name}
@@ -577,13 +526,14 @@ export function MultiStepExportInterface({
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Field Type</Label>
+                    <Label>Field Type *</Label>
                     <Select
                       value={newCustomField.type}
                       onValueChange={(value) =>
                         setNewCustomField((prev) => ({
                           ...prev,
                           type: value as any,
+                          listItems: [],
                         }))
                       }
                     >
@@ -592,42 +542,80 @@ export function MultiStepExportInterface({
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="text">Text</SelectItem>
-                        <SelectItem value="number">Number</SelectItem>
                         <SelectItem value="date">Date</SelectItem>
-                        <SelectItem value="boolean">Yes/No</SelectItem>
-                        <SelectItem value="select">Dropdown</SelectItem>
+                        <SelectItem value="list">List</SelectItem>
+                        <SelectItem value="barcode">Barcode</SelectItem>
+                        <SelectItem value="numeric">Numeric</SelectItem>
+                        <SelectItem value="hyperlink">Hyperlink</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="required"
-                      checked={newCustomField.required}
-                      onCheckedChange={(checked) =>
-                        setNewCustomField((prev) => ({
-                          ...prev,
-                          required: checked as boolean,
-                        }))
-                      }
-                    />
-                    <Label
-                      htmlFor="required"
-                      className="font-normal cursor-pointer"
-                    >
-                      Required field
-                    </Label>
-                  </div>
                 </div>
+
+                {/* List Items Input (only shown when type is "list") */}
+                {newCustomField.type === "list" && (
+                  <div className="space-y-3 p-3 border rounded-lg bg-background">
+                    <Label>List Items</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Enter list item"
+                        value={newListItem}
+                        onChange={(e) => setNewListItem(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleAddListItem();
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={handleAddListItem}
+                        disabled={!newListItem.trim()}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {newCustomField.listItems &&
+                      newCustomField.listItems.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {newCustomField.listItems.map((item, index) => (
+                            <Badge
+                              key={index}
+                              variant="secondary"
+                              className="gap-1"
+                            >
+                              {item}
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveListItem(index)}
+                                className="ml-1 hover:text-destructive"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                  </div>
+                )}
+
                 <Button
                   onClick={handleAddCustomField}
-                  disabled={!newCustomField.name}
+                  disabled={
+                    !newCustomField.name ||
+                    (newCustomField.type === "list" &&
+                      (!newCustomField.listItems ||
+                        newCustomField.listItems.length === 0))
+                  }
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Field
                 </Button>
               </div>
 
-              {/* Custom Fields List */}
+              {/* Custom Fields List with Collapsible */}
               <div className="space-y-3">
                 <h3 className="font-semibold">
                   Configured Custom Fields ({exportState.customFields.length})
@@ -638,28 +626,83 @@ export function MultiStepExportInterface({
                     don't need additional fields.
                   </p>
                 ) : (
-                  <div className="space-y-2">
-                    {exportState.customFields.map((field) => (
-                      <div
-                        key={field.id}
-                        className="flex items-center justify-between p-3 border rounded-lg"
-                      >
-                        <div>
-                          <div className="font-medium">{field.name}</div>
-                          <div className="text-sm text-muted-foreground">
-                            Type: {field.type} {field.required && "• Required"}
+                  <>
+                    <div className="space-y-2">
+                      {exportState.customFields
+                        .slice(0, showAllCustomFields ? undefined : 5)
+                        .map((field) => (
+                          <div
+                            key={field.id}
+                            className="flex items-center justify-between p-3 border rounded-lg"
+                          >
+                            <div className="flex-1">
+                              <div className="font-medium">{field.name}</div>
+                              <div className="text-sm text-muted-foreground">
+                                Type: {field.type}
+                                {field.type === "list" &&
+                                  field.listItems &&
+                                  ` (${field.listItems.length} items)`}
+                                {field.required && " • Required"}
+                              </div>
+                              {field.type === "list" && field.listItems && (
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {field.listItems
+                                    .slice(0, 3)
+                                    .map((item, idx) => (
+                                      <Badge
+                                        key={idx}
+                                        variant="outline"
+                                        className="text-xs"
+                                      >
+                                        {item}
+                                      </Badge>
+                                    ))}
+                                  {field.listItems.length > 3 && (
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs"
+                                    >
+                                      +{field.listItems.length - 3} more
+                                    </Badge>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleRemoveCustomField(field.id)}
+                              className="hover:bg-destructive/10 hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
                           </div>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleRemoveCustomField(field.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
+                        ))}
+                    </div>
+                    {exportState.customFields.length > 5 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          setShowAllCustomFields(!showAllCustomFields)
+                        }
+                        className="w-full"
+                      >
+                        {showAllCustomFields ? (
+                          <>
+                            <ChevronUp className="h-4 w-4 mr-2" />
+                            Show Less
+                          </>
+                        ) : (
+                          <>
+                            <ChevronDown className="h-4 w-4 mr-2" />
+                            Show All {exportState.customFields.length} Custom
+                            Fields
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -713,10 +756,10 @@ export function MultiStepExportInterface({
                   <Card>
                     <CardContent className="p-4 text-center">
                       <div className="text-2xl font-bold text-accent">
-                        {exportState.testReadings.length}
+                        {exportState.failurePoints.length}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        Test Readings
+                        Failure Points
                       </div>
                     </CardContent>
                   </Card>
@@ -732,38 +775,34 @@ export function MultiStepExportInterface({
 
                 {/* Configuration Summary */}
                 <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h3 className="font-semibold mb-3 flex items-center gap-2">
-                      <ClipboardCheck className="h-4 w-4" />
-                      Test Readings Summary
-                    </h3>
-                    <div className="space-y-2">
-                      {exportState.testReadings.slice(0, 3).map((reading) => {
-                        const asset = exportState.assets.find(
-                          (a) => a.id === reading.assetId
-                        );
-                        return (
-                          <div
-                            key={reading.id}
-                            className="text-sm flex items-center justify-between"
-                          >
-                            <span>{reading.name}</span>
-                            <span>{asset?.name || "Unknown"}</span>
-                            {reading.isFailurePoint && (
-                              <Badge variant="destructive" className="text-xs">
-                                Failure Point
+                  {exportState.failurePoints.length > 0 && (
+                    <div className="p-4 border rounded-lg">
+                      <h3 className="font-semibold mb-3 flex items-center gap-2">
+                        <ClipboardCheck className="h-4 w-4" />
+                        Failure Points Summary
+                      </h3>
+                      <div className="space-y-2">
+                        {exportState.failurePoints
+                          .slice(0, 3)
+                          .map((failurePoint) => (
+                            <div
+                              key={failurePoint.id}
+                              className="text-sm flex items-center justify-between"
+                            >
+                              <span>{failurePoint.name}</span>
+                              <Badge variant="outline" className="text-xs">
+                                {failurePoint.severity}
                               </Badge>
-                            )}
+                            </div>
+                          ))}
+                        {exportState.failurePoints.length > 3 && (
+                          <div className="text-sm text-muted-foreground">
+                            +{exportState.failurePoints.length - 3} more...
                           </div>
-                        );
-                      })}
-                      {exportState.testReadings.length > 3 && (
-                        <div className="text-sm text-muted-foreground">
-                          +{exportState.testReadings.length - 3} more...
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {exportState.customFields.length > 0 && (
                     <div className="p-4 border rounded-lg">
@@ -974,9 +1013,9 @@ export function MultiStepExportInterface({
               {/* Completion Actions */}
               {exportState.overallStatus === "completed" && (
                 <div className="flex justify-center gap-3 pt-4">
-                  <Button variant="outline" onClick={() => setCurrentStep(1)}>
+                  {/* <Button variant="outline" onClick={() => setCurrentStep(1)}>
                     Start New Export
-                  </Button>
+                  </Button> */}
                   <Button onClick={onBackToDashboard}>
                     <CheckCircle className="h-4 w-4 mr-2" />
                     Back to Dashboard

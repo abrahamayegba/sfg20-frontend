@@ -36,6 +36,8 @@ import {
   Loader2,
   Info,
   AlertCircle,
+  ChevronDown,
+  Layers,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -86,6 +88,10 @@ export function SimplifiedMappingInterface({
   const [mappingProgress, setMappingProgress] = useState(0);
   const [isExporting, setIsExporting] = useState(false);
   const [exportComplete, setExportComplete] = useState(false);
+  const [showAllMappings, setShowAllMappings] = useState(false);
+  const [expandedTaskLists, setExpandedTaskLists] = useState<
+    Record<string, boolean>
+  >({});
 
   // Mock data - in real app this would come from imported SFG20 data
   const mockRegimes: Regime[] = [
@@ -153,6 +159,87 @@ export function SimplifiedMappingInterface({
                 "Clean air ducts, coils, casing, and fan per manufacturer recommendations...",
               linkId: "bound hill steady",
             },
+            {
+              id: "task_5",
+              title: "Filter replacement",
+              classification: "Green",
+              frequencyChange: null,
+              intervalInHours: 8760,
+              where: "Royal Infirmary - Facility",
+              minutes: 20,
+              skill: { Skilling: "Refrigeration Engineer", SkillingCode: "RE" },
+              content:
+                "Replace all air and water filters according to maintenance schedule...",
+              linkId: "filter swap routine",
+            },
+            {
+              id: "task_6",
+              title: "Calibration of monitoring instruments",
+              classification: "Amber",
+              frequencyChange: null,
+              intervalInHours: 4380,
+              where: "Royal Infirmary - Facility",
+              minutes: 30,
+              skill: {
+                Skilling: "Instrumentation Technician",
+                SkillingCode: "IT",
+              },
+              content:
+                "Calibrate sensors and meters following manufacturer guidelines...",
+              linkId: "monitor cal check",
+            },
+            {
+              id: "task_7",
+              title: "Emergency lighting test",
+              classification: "Red",
+              frequencyChange: null,
+              intervalInHours: 720,
+              where: "Royal Infirmary - Facility",
+              minutes: 10,
+              skill: { Skilling: "Competent Person", SkillingCode: "CP" },
+              content:
+                "Test emergency lighting circuits to ensure proper operation...",
+              linkId: "emerg light test",
+            },
+            {
+              id: "task_80",
+              title: "Ventilation airflow check",
+              classification: "Amber",
+              frequencyChange: null,
+              intervalInHours: 876,
+              where: "Royal Infirmary - Facility",
+              minutes: 15,
+              skill: { Skilling: "HVAC Technician", SkillingCode: "HV" },
+              content:
+                "Measure airflow and verify compliance with standards...",
+              linkId: "vent flow check",
+            },
+            {
+              id: "task_9",
+              title: "Water quality sampling",
+              classification: "Green",
+              frequencyChange: null,
+              intervalInHours: 2190,
+              where: "Royal Infirmary - Facility",
+              minutes: 25,
+              skill: { Skilling: "Plumbing Engineer", SkillingCode: "PE" },
+              content:
+                "Collect and test water samples to ensure quality standards are met...",
+              linkId: "water sample check",
+            },
+            {
+              id: "task_10333",
+              title: "Fire alarm system test",
+              classification: "Red",
+              frequencyChange: null,
+              intervalInHours: 876,
+              where: "Royal Infirmary - Facility",
+              minutes: 20,
+              skill: { Skilling: "Fire Safety Officer", SkillingCode: "FS" },
+              content:
+                "Conduct full fire alarm test and log results in maintenance records...",
+              linkId: "fire alarm check",
+            },
           ],
         },
         {
@@ -162,7 +249,7 @@ export function SimplifiedMappingInterface({
           rawTitle: "Air to Water Heat Pump",
           tasks: [
             {
-              id: "task_5",
+              id: "task_50",
               title: "System pressure check",
               classification: "Red",
               frequencyChange: null,
@@ -186,7 +273,7 @@ export function SimplifiedMappingInterface({
               linkId: "refrigerant check",
             },
             {
-              id: "task_7",
+              id: "task_70",
               title: "Filter cleaning",
               classification: "Green",
               frequencyChange: null,
@@ -196,6 +283,87 @@ export function SimplifiedMappingInterface({
               skill: { Skilling: "General Maintenance", SkillingCode: "GM" },
               content: "Clean or replace air filters...",
               linkId: "filter maintenance",
+            },
+            {
+              id: "task_15",
+              title: "Filter replacement",
+              classification: "Green",
+              frequencyChange: null,
+              intervalInHours: 8760,
+              where: "Royal Infirmary - Facility",
+              minutes: 20,
+              skill: { Skilling: "Refrigeration Engineer", SkillingCode: "RE" },
+              content:
+                "Replace all air and water filters according to maintenance schedule...",
+              linkId: "filter swap routine",
+            },
+            {
+              id: "task_16",
+              title: "Calibration of monitoring instruments",
+              classification: "Amber",
+              frequencyChange: null,
+              intervalInHours: 4380,
+              where: "Royal Infirmary - Facility",
+              minutes: 30,
+              skill: {
+                Skilling: "Instrumentation Technician",
+                SkillingCode: "IT",
+              },
+              content:
+                "Calibrate sensors and meters following manufacturer guidelines...",
+              linkId: "monitor cal check",
+            },
+            {
+              id: "task_17",
+              title: "Emergency lighting test",
+              classification: "Red",
+              frequencyChange: null,
+              intervalInHours: 720,
+              where: "Royal Infirmary - Facility",
+              minutes: 10,
+              skill: { Skilling: "Competent Person", SkillingCode: "CP" },
+              content:
+                "Test emergency lighting circuits to ensure proper operation...",
+              linkId: "emerg light test",
+            },
+            {
+              id: "task_18",
+              title: "Ventilation airflow check",
+              classification: "Amber",
+              frequencyChange: null,
+              intervalInHours: 876,
+              where: "Royal Infirmary - Facility",
+              minutes: 15,
+              skill: { Skilling: "HVAC Technician", SkillingCode: "HV" },
+              content:
+                "Measure airflow and verify compliance with standards...",
+              linkId: "vent flow check",
+            },
+            {
+              id: "task_19",
+              title: "Water quality sampling",
+              classification: "Green",
+              frequencyChange: null,
+              intervalInHours: 2190,
+              where: "Royal Infirmary - Facility",
+              minutes: 25,
+              skill: { Skilling: "Plumbing Engineer", SkillingCode: "PE" },
+              content:
+                "Collect and test water samples to ensure quality standards are met...",
+              linkId: "water sample check",
+            },
+            {
+              id: "task_20",
+              title: "Fire alarm system test",
+              classification: "Red",
+              frequencyChange: null,
+              intervalInHours: 876,
+              where: "Royal Infirmary - Facility",
+              minutes: 20,
+              skill: { Skilling: "Fire Safety Officer", SkillingCode: "FS" },
+              content:
+                "Conduct full fire alarm test and log results in maintenance records...",
+              linkId: "fire alarm check",
             },
           ],
         },
@@ -213,7 +381,7 @@ export function SimplifiedMappingInterface({
           rawTitle: "Electrical Systems",
           tasks: [
             {
-              id: "task_8",
+              id: "task_81",
               title: "Circuit testing",
               classification: "Red",
               frequencyChange: null,
@@ -252,7 +420,7 @@ export function SimplifiedMappingInterface({
           rawTitle: "Fume Hood",
           tasks: [
             {
-              id: "task_10",
+              id: "task_10122",
               title: "Airflow inspection",
               classification: "Red",
               frequencyChange: null,
@@ -318,6 +486,87 @@ export function SimplifiedMappingInterface({
                 "Clean condenser coils and check for debris accumulation...",
               linkId: "condenser cleaning",
             },
+            {
+              id: "task_500",
+              title: "Filter replacement",
+              classification: "Green",
+              frequencyChange: null,
+              intervalInHours: 8760,
+              where: "Royal Infirmary - Facility",
+              minutes: 20,
+              skill: { Skilling: "Refrigeration Engineer", SkillingCode: "RE" },
+              content:
+                "Replace all air and water filters according to maintenance schedule...",
+              linkId: "filter swap routine",
+            },
+            {
+              id: "task_6",
+              title: "Calibration of monitoring instruments",
+              classification: "Amber",
+              frequencyChange: null,
+              intervalInHours: 4380,
+              where: "Royal Infirmary - Facility",
+              minutes: 30,
+              skill: {
+                Skilling: "Instrumentation Technician",
+                SkillingCode: "IT",
+              },
+              content:
+                "Calibrate sensors and meters following manufacturer guidelines...",
+              linkId: "monitor cal check",
+            },
+            {
+              id: "task_700",
+              title: "Emergency lighting test",
+              classification: "Red",
+              frequencyChange: null,
+              intervalInHours: 720,
+              where: "Royal Infirmary - Facility",
+              minutes: 10,
+              skill: { Skilling: "Competent Person", SkillingCode: "CP" },
+              content:
+                "Test emergency lighting circuits to ensure proper operation...",
+              linkId: "emerg light test",
+            },
+            {
+              id: "task_82",
+              title: "Ventilation airflow check",
+              classification: "Amber",
+              frequencyChange: null,
+              intervalInHours: 876,
+              where: "Royal Infirmary - Facility",
+              minutes: 15,
+              skill: { Skilling: "HVAC Technician", SkillingCode: "HV" },
+              content:
+                "Measure airflow and verify compliance with standards...",
+              linkId: "vent flow check",
+            },
+            {
+              id: "task_9",
+              title: "Water quality sampling",
+              classification: "Green",
+              frequencyChange: null,
+              intervalInHours: 2190,
+              where: "Royal Infirmary - Facility",
+              minutes: 25,
+              skill: { Skilling: "Plumbing Engineer", SkillingCode: "PE" },
+              content:
+                "Collect and test water samples to ensure quality standards are met...",
+              linkId: "water sample check",
+            },
+            {
+              id: "task_1012",
+              title: "Fire alarm system test",
+              classification: "Red",
+              frequencyChange: null,
+              intervalInHours: 876,
+              where: "Royal Infirmary - Facility",
+              minutes: 20,
+              skill: { Skilling: "Fire Safety Officer", SkillingCode: "FS" },
+              content:
+                "Conduct full fire alarm test and log results in maintenance records...",
+              linkId: "fire alarm check",
+            },
           ],
         },
         {
@@ -354,6 +603,87 @@ export function SimplifiedMappingInterface({
               content:
                 "Inspect fan blades, motor mounts, and lubrication points...",
               linkId: "fan motor inspection",
+            },
+            {
+              id: "task_50000",
+              title: "Filter replacement",
+              classification: "Green",
+              frequencyChange: null,
+              intervalInHours: 8760,
+              where: "Royal Infirmary - Facility",
+              minutes: 20,
+              skill: { Skilling: "Refrigeration Engineer", SkillingCode: "RE" },
+              content:
+                "Replace all air and water filters according to maintenance schedule...",
+              linkId: "filter swap routine",
+            },
+            {
+              id: "task_6",
+              title: "Calibration of monitoring instruments",
+              classification: "Amber",
+              frequencyChange: null,
+              intervalInHours: 4380,
+              where: "Royal Infirmary - Facility",
+              minutes: 30,
+              skill: {
+                Skilling: "Instrumentation Technician",
+                SkillingCode: "IT",
+              },
+              content:
+                "Calibrate sensors and meters following manufacturer guidelines...",
+              linkId: "monitor cal check",
+            },
+            {
+              id: "task_7000",
+              title: "Emergency lighting test",
+              classification: "Red",
+              frequencyChange: null,
+              intervalInHours: 720,
+              where: "Royal Infirmary - Facility",
+              minutes: 10,
+              skill: { Skilling: "Competent Person", SkillingCode: "CP" },
+              content:
+                "Test emergency lighting circuits to ensure proper operation...",
+              linkId: "emerg light test",
+            },
+            {
+              id: "task_83",
+              title: "Ventilation airflow check",
+              classification: "Amber",
+              frequencyChange: null,
+              intervalInHours: 876,
+              where: "Royal Infirmary - Facility",
+              minutes: 15,
+              skill: { Skilling: "HVAC Technician", SkillingCode: "HV" },
+              content:
+                "Measure airflow and verify compliance with standards...",
+              linkId: "vent flow check",
+            },
+            {
+              id: "task_9",
+              title: "Water quality sampling",
+              classification: "Green",
+              frequencyChange: null,
+              intervalInHours: 2190,
+              where: "Royal Infirmary - Facility",
+              minutes: 25,
+              skill: { Skilling: "Plumbing Engineer", SkillingCode: "PE" },
+              content:
+                "Collect and test water samples to ensure quality standards are met...",
+              linkId: "water sample check",
+            },
+            {
+              id: "task_101",
+              title: "Fire alarm system test",
+              classification: "Red",
+              frequencyChange: null,
+              intervalInHours: 876,
+              where: "Royal Infirmary - Facility",
+              minutes: 20,
+              skill: { Skilling: "Fire Safety Officer", SkillingCode: "FS" },
+              content:
+                "Conduct full fire alarm test and log results in maintenance records...",
+              linkId: "fire alarm check",
             },
           ],
         },
@@ -411,52 +741,120 @@ export function SimplifiedMappingInterface({
   // Fixed mapping rules - users cannot change these
   const fixedMappingRules = [
     {
-      sfg20Field: "Schedule",
+      sfg20Field: "Schedule - Raw Title",
       sfg20Example: "Biomass Boiler",
-      simproField: "Asset",
-      simproDescription: "Equipment/system being maintained",
+      simproField: "Asset Type/Name",
+      simproDescription: "Equipment or system being maintained",
     },
     {
       sfg20Field: "Task Title",
       sfg20Example: "Formal Visual Inspection",
-      simproField: "Maintenance Task Name",
+      simproField: "Task Name",
       simproDescription: "Name of the maintenance activity",
     },
     {
-      sfg20Field: "Task Content",
-      sfg20Example: "Confirm inspection frequency...",
-      simproField: "Task Description",
-      simproDescription: "Detailed instructions for the task",
+      sfg20Field: "Task - Content",
+      sfg20Example: "Confirm inspection frequency and ensure compliance...",
+      simproField: "Test Readings",
+      simproDescription: "Individual checks or instructions for the task",
     },
     {
-      sfg20Field: "Classification",
+      sfg20Field: "Task - Classification",
       sfg20Example: "Red / Amber / Green",
       simproField: "Priority Level",
-      simproDescription: "Criticality of the task",
+      simproDescription: "Criticality of the maintenance task",
     },
     {
-      sfg20Field: "Interval (Hours)",
+      sfg20Field: "Frequency - Interval (Hours)",
       sfg20Example: "730 hours (1 month)",
-      simproField: "Maintenance Schedule",
+      simproField: "Service Level",
       simproDescription: "How often the task should be performed",
     },
     {
-      sfg20Field: "Where",
+      sfg20Field: "Task - Where",
       sfg20Example: "Royal Infirmary - Facility",
       simproField: "Asset Location",
       simproDescription: "Physical location of the asset",
     },
     {
-      sfg20Field: "Skill",
+      sfg20Field: "Skill - Skilling",
       sfg20Example: "Competent Person (CP)",
       simproField: "Required Technician Level",
-      simproDescription: "Skill level needed to perform task",
+      simproDescription: "Skill level or qualification required",
     },
     {
-      sfg20Field: "Minutes",
+      sfg20Field: "Task - Minutes",
       sfg20Example: "5 minutes",
       simproField: "Estimated Duration",
-      simproDescription: "Expected time to complete task",
+      simproDescription: "Expected time to complete the task",
+    },
+    {
+      sfg20Field: "Schedule - Code",
+      sfg20Example: "16-08",
+      simproField: "Asset Reference Code",
+      simproDescription: "Unique identifier for the asset type",
+    },
+    {
+      sfg20Field: "Schedule - Schedule Categories",
+      sfg20Example: "SFG20 > Boilers/Heat Generators",
+      simproField: "Asset Category",
+      simproDescription: "Category or group of the asset",
+    },
+    {
+      sfg20Field: "Task - Steps",
+      sfg20Example:
+        '["Confirm inspection frequency via risk assessment...", ...]',
+      simproField: "Test Readings Details",
+      simproDescription: "Detailed steps for the task (part of test readings)",
+    },
+    {
+      sfg20Field: "Task - Full Html Content",
+      sfg20Example: "<p>All electrical equipment that falls outside...</p>",
+      simproField: "Task Notes or Instructions",
+      simproDescription: "Full detailed instructions in HTML format",
+    },
+    {
+      sfg20Field: "Task - Url",
+      sfg20Example: "https://www.demo.facilities-iq.com/sfg20?phrase=...",
+      simproField: "Reference URL",
+      simproDescription: "External reference link for the task",
+    },
+    {
+      sfg20Field: "Schedule - Version",
+      sfg20Example: "8",
+      simproField: "Asset Version",
+      simproDescription: "Version of the asset schedule",
+    },
+    {
+      sfg20Field: "Schedule - Modified",
+      sfg20Example: "2024-01-25T15:35:43.04505Z",
+      simproField: "Last Updated Date",
+      simproDescription: "Date the schedule was last modified",
+    },
+    {
+      sfg20Field: "Schedule - Retired",
+      sfg20Example: "false",
+      simproField: "Asset Status",
+      simproDescription:
+        "Whether the asset is active or retired (active/inactive)",
+    },
+    {
+      sfg20Field: "Frequency - Label",
+      sfg20Example: "1M",
+      simproField: "Frequency Label",
+      simproDescription: "Human-readable frequency (e.g., monthly)",
+    },
+    {
+      sfg20Field: "Task - ExecutionOrder",
+      sfg20Example: "0, 1, 2...",
+      simproField: "Task Order",
+      simproDescription: "Order in which tasks should be performed",
+    },
+    {
+      sfg20Field: "Task - FullContent",
+      sfg20Example: "All electrical equipment that falls outside...",
+      simproField: "Full Task Description",
+      simproDescription: "Plain text full description of the task",
     },
   ];
 
@@ -597,8 +995,6 @@ export function SimplifiedMappingInterface({
 
     localStorage.setItem("export_data", JSON.stringify(exportData));
 
-    console.log(exportData);
-
     setIsExporting(false);
     setExportComplete(true);
 
@@ -639,6 +1035,13 @@ export function SimplifiedMappingInterface({
     if (hours < 730) return `${Math.round(hours / 168)} weeks`;
     if (hours < 8760) return `${Math.round(hours / 730)} months`;
     return `${Math.round(hours / 8760)} years`;
+  };
+
+  const toggleTaskListExpansion = (scheduleId: string) => {
+    setExpandedTaskLists((prev) => ({
+      ...prev,
+      [scheduleId]: !prev[scheduleId],
+    }));
   };
 
   return (
@@ -785,7 +1188,7 @@ export function SimplifiedMappingInterface({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Eye className="h-5 w-5" />
-                  Standard Field Mapping (Read-Only)
+                  Standard Field Mapping (Read-Only) SFG20 to Simpro
                 </CardTitle>
                 <CardDescription>
                   These mappings are standardized across all exports and cannot
@@ -794,7 +1197,10 @@ export function SimplifiedMappingInterface({
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {fixedMappingRules.map((rule, index) => (
+                  {(showAllMappings
+                    ? fixedMappingRules
+                    : fixedMappingRules.slice(0, 6)
+                  ).map((rule, index) => (
                     <div
                       key={index}
                       className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg"
@@ -819,6 +1225,29 @@ export function SimplifiedMappingInterface({
                     </div>
                   ))}
                 </div>
+
+                {fixedMappingRules.length > 4 && (
+                  <div className="mt-4 flex justify-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowAllMappings(!showAllMappings)}
+                      className="gap-2"
+                    >
+                      {showAllMappings ? (
+                        <>
+                          Show Less
+                          <ChevronRight className="h-4 w-4 -rotate-90" />
+                        </>
+                      ) : (
+                        <>
+                          View All {fixedMappingRules.length} Mappings
+                          <ChevronRight className="h-4 w-4 rotate-90" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -834,8 +1263,8 @@ export function SimplifiedMappingInterface({
                       Select Data to Export
                     </CardTitle>
                     <CardDescription>
-                      Choose which regimes, schedules, and tasks to include in
-                      your export
+                      Choose which regimes, assets, and maintenance tasks to
+                      include in your export
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -853,30 +1282,35 @@ export function SimplifiedMappingInterface({
                                 )
                               )
                           );
+
                           if (filteredSchedules.length === 0) return null;
+
                           return (
-                            <Collapsible key={regime.id} defaultOpen>
+                            <Collapsible key={regime.id}>
                               <div className="flex items-center gap-2 w-full p-3 hover:bg-muted rounded-lg">
-                                <CollapsibleTrigger asChild>
-                                  <div className="flex items-center gap-2 flex-1 cursor-pointer">
-                                    <ChevronRight className="h-4 w-4 transition-transform" />
-                                    <Building className="h-4 w-4 text-blue-500" />
-                                    <span className="font-medium text-left">
-                                      {regime.name}
-                                    </span>
-                                    <Badge variant="outline">
-                                      v{regime.version}
-                                    </Badge>
-                                  </div>
-                                </CollapsibleTrigger>
                                 <Checkbox
                                   checked={selectedRegimes.includes(regime.id)}
                                   onCheckedChange={() =>
                                     handleRegimeToggle(regime.id)
                                   }
                                 />
+                                <CollapsibleTrigger className="flex items-center gap-2 flex-1">
+                                  <ChevronRight className="h-4 w-4 transition-transform data-[state=open]:rotate-90" />
+                                  <Building className="h-4 w-4 text-blue-500" />
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-xs bg-blue-100 text-blue-700"
+                                  >
+                                    REGIME
+                                  </Badge>
+                                  <span className="font-medium flex-1 text-left">
+                                    {regime.name}
+                                  </span>
+                                  <Badge variant="outline">
+                                    v{regime.version}
+                                  </Badge>
+                                </CollapsibleTrigger>
                               </div>
-
                               <CollapsibleContent className="ml-6 mt-2 space-y-2">
                                 {filteredSchedules.map((schedule) => {
                                   const filteredTasks = schedule.tasks.filter(
@@ -885,12 +1319,21 @@ export function SimplifiedMappingInterface({
                                         task.classification
                                       )
                                   );
+                                  const showAllTasks =
+                                    expandedTaskLists[schedule.id] ||
+                                    filteredTasks.length <= 5;
+                                  const displayedTasks = showAllTasks
+                                    ? filteredTasks
+                                    : filteredTasks.slice(0, 5);
+                                  const hasMoreTasks = filteredTasks.length > 5;
 
                                   return (
-                                    <Collapsible key={schedule.id} defaultOpen>
-                                      <CollapsibleTrigger asChild>
-                                        <div className="flex items-center gap-2 w-full p-2 hover:bg-muted rounded cursor-pointer">
-                                          <ChevronRight className="h-4 w-4 transition-transform" />
+                                    <div
+                                      key={schedule.id}
+                                      className="space-y-2"
+                                    >
+                                      <Collapsible>
+                                        <div className="flex items-center gap-2 w-full p-2 hover:bg-muted rounded">
                                           <Checkbox
                                             checked={selectedSchedules.includes(
                                               schedule.id
@@ -898,53 +1341,93 @@ export function SimplifiedMappingInterface({
                                             onCheckedChange={() =>
                                               handleScheduleToggle(schedule.id)
                                             }
-                                            onClick={(e) => e.stopPropagation()}
                                           />
-                                          <FileText className="h-4 w-4 text-green-500" />
-                                          <span className="text-sm flex-1 text-left">
-                                            {schedule.rawTitle}
-                                          </span>
-                                          <Badge
-                                            variant="outline"
-                                            className="text-xs"
-                                          >
-                                            {filteredTasks.length} tasks
-                                          </Badge>
-                                        </div>
-                                      </CollapsibleTrigger>
-
-                                      <CollapsibleContent className="ml-6 mt-1 space-y-1">
-                                        {filteredTasks.map((task) => (
-                                          <div
-                                            key={task.id}
-                                            className="flex items-center gap-2 p-2 hover:bg-muted rounded"
-                                          >
-                                            <Checkbox
-                                              checked={selectedTasks.includes(
-                                                task.id
-                                              )}
-                                              onCheckedChange={() =>
-                                                handleTaskToggle(task.id)
-                                              }
-                                            />
-                                            <Zap className="h-4 w-4 text-orange-500" />
-                                            <span className="text-sm flex-1">
-                                              {task.title}
+                                          <CollapsibleTrigger className="flex items-center gap-2 flex-1">
+                                            <ChevronRight className="h-4 w-4 transition-transform data-[state=open]:rotate-90" />
+                                            <FileText className="h-4 w-4 text-green-500" />
+                                            <Badge
+                                              variant="secondary"
+                                              className="text-xs bg-green-100 text-green-700"
+                                            >
+                                              ASSET
+                                            </Badge>
+                                            <span className="text-sm flex-1 text-left font-medium">
+                                              {schedule.rawTitle}
                                             </span>
                                             <Badge
-                                              className={`text-xs border ${getClassificationColor(
-                                                task.classification
-                                              )}`}
                                               variant="outline"
+                                              className="text-xs"
                                             >
-                                              {getClassificationLabel(
-                                                task.classification
-                                              )}
+                                              {filteredTasks.length} tasks
                                             </Badge>
-                                          </div>
-                                        ))}
-                                      </CollapsibleContent>
-                                    </Collapsible>
+                                          </CollapsibleTrigger>
+                                        </div>
+                                        <CollapsibleContent className="ml-6 mt-1 space-y-1">
+                                          {displayedTasks.map((task) => (
+                                            <div
+                                              key={task.id}
+                                              className="flex items-center gap-2 p-2 hover:bg-muted rounded"
+                                            >
+                                              <Checkbox
+                                                checked={selectedTasks.includes(
+                                                  task.id
+                                                )}
+                                                onCheckedChange={() =>
+                                                  handleTaskToggle(task.id)
+                                                }
+                                              />
+                                              <Zap className="h-4 w-4 text-orange-500" />
+                                              <Badge
+                                                variant="secondary"
+                                                className="text-xs bg-orange-100 text-orange-700"
+                                              >
+                                                TASK
+                                              </Badge>
+                                              <span className="text-sm flex-1">
+                                                {task.title}
+                                              </span>
+                                              <Badge
+                                                className={`text-xs border ${getClassificationColor(
+                                                  task.classification
+                                                )}`}
+                                                variant="outline"
+                                              >
+                                                {getClassificationLabel(
+                                                  task.classification
+                                                )}
+                                              </Badge>
+                                            </div>
+                                          ))}
+
+                                          {hasMoreTasks && (
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              className="w-full mt-2 text-xs"
+                                              onClick={() =>
+                                                toggleTaskListExpansion(
+                                                  schedule.id
+                                                )
+                                              }
+                                            >
+                                              {showAllTasks ? (
+                                                <>
+                                                  <ChevronDown className="h-3 w-3 mr-1 rotate-180" />
+                                                  Show Less
+                                                </>
+                                              ) : (
+                                                <>
+                                                  <ChevronDown className="h-3 w-3 mr-1" />
+                                                  Show{" "}
+                                                  {filteredTasks.length - 5}{" "}
+                                                  More Tasks
+                                                </>
+                                              )}
+                                            </Button>
+                                          )}
+                                        </CollapsibleContent>
+                                      </Collapsible>
+                                    </div>
                                   );
                                 })}
                               </CollapsibleContent>
@@ -953,6 +1436,275 @@ export function SimplifiedMappingInterface({
                         })}
                       </div>
                     </ScrollArea>
+                    <Separator className="my-6" />
+
+                    <Collapsible>
+                      <CollapsibleTrigger className="flex items-center gap-2 w-full p-3 hover:bg-muted rounded-lg transition-colors">
+                        <Layers className="h-5 w-5 text-primary" />
+                        <span className="font-semibold text-base">
+                          Understanding the SFG20 Data Hierarchy
+                        </span>
+                        <ChevronRight className="h-4 w-4 ml-auto transition-transform data-[state=open]:rotate-90" />
+                      </CollapsibleTrigger>
+
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-6 p-4 bg-muted/30 rounded-lg">
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-blue-100 rounded-lg">
+                                <Building className="h-5 w-5 text-blue-600" />
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-lg text-blue-700">
+                                  Level 1: Regime
+                                </h4>
+                                <p className="text-sm text-muted-foreground">
+                                  Top-level organizational grouping
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="ml-12 space-y-2 p-4 bg-background rounded-lg border-l-4 border-blue-500">
+                              <div className="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                  <span className="font-medium text-blue-700">
+                                    Name:
+                                  </span>
+                                  <p className="text-muted-foreground">
+                                    Region 1 - Regime
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-blue-700">
+                                    Version:
+                                  </span>
+                                  <p className="text-muted-foreground">2</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-blue-700">
+                                    ID:
+                                  </span>
+                                  <p className="text-muted-foreground text-xs">
+                                    ifhVJoSJviLtNG
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-blue-700">
+                                    GUID:
+                                  </span>
+                                  <p className="text-muted-foreground text-xs">
+                                    d21b8078-0faf-5099...
+                                  </p>
+                                </div>
+                              </div>
+                              <p className="text-xs text-muted-foreground italic mt-2">
+                                A regime represents a collection of maintenance
+                                schedules for a facility or region
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-center">
+                            <div className="h-8 w-0.5 bg-gradient-to-b from-blue-500 to-green-500" />
+                          </div>
+
+                          {/* Schedule Level */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-green-100 rounded-lg">
+                                <FileText className="h-5 w-5 text-green-600" />
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-lg text-green-700">
+                                  Level 2: Schedule (Asset)
+                                </h4>
+                                <p className="text-sm text-muted-foreground">
+                                  Equipment or system type requiring maintenance
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="ml-12 space-y-2 p-4 bg-background rounded-lg border-l-4 border-green-500">
+                              <div className="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                  <span className="font-medium text-green-700">
+                                    Raw Title:
+                                  </span>
+                                  <p className="text-muted-foreground">
+                                    Biomass Boiler
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-green-700">
+                                    Code:
+                                  </span>
+                                  <p className="text-muted-foreground">
+                                    05-38-0018
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-green-700">
+                                    Full Title:
+                                  </span>
+                                  <p className="text-muted-foreground text-xs">
+                                    Region 1 › Royal Infirmary - Biomass Boiler
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-green-700">
+                                    Category:
+                                  </span>
+                                  <p className="text-muted-foreground text-xs">
+                                    SFG20 › Boilers/Heat Generators
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-green-700">
+                                    Version:
+                                  </span>
+                                  <p className="text-muted-foreground">8</p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-green-700">
+                                    Modified:
+                                  </span>
+                                  <p className="text-muted-foreground text-xs">
+                                    2024-01-25
+                                  </p>
+                                </div>
+                              </div>
+                              <p className="text-xs text-muted-foreground italic mt-2">
+                                Schedules define specific equipment types and
+                                contain all maintenance tasks for that asset
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-center">
+                            <div className="h-8 w-0.5 bg-gradient-to-b from-green-500 to-orange-500" />
+                          </div>
+
+                          {/* Task Level */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-orange-100 rounded-lg">
+                                <Zap className="h-5 w-5 text-orange-600" />
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-lg text-orange-700">
+                                  Level 3: Task
+                                </h4>
+                                <p className="text-sm text-muted-foreground">
+                                  Individual maintenance activity
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="ml-12 space-y-2 p-4 bg-background rounded-lg border-l-4 border-orange-500">
+                              <div className="grid grid-cols-2 gap-3 text-sm">
+                                <div className="col-span-2">
+                                  <span className="font-medium text-orange-700">
+                                    Title:
+                                  </span>
+                                  <p className="text-muted-foreground">
+                                    Formal Visual Inspection of in-service
+                                    electrical equipment
+                                  </p>
+                                </div>
+                                <div className=" flex items-center gap-x-2">
+                                  <span className="font-medium text-orange-700">
+                                    Classification:
+                                  </span>
+                                  <Badge className="bg-red-100 text-red-800 border-red-300 text-xs">
+                                    Statutory & Mandatory
+                                  </Badge>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-orange-700">
+                                    Frequency:
+                                  </span>
+                                  <p className="text-muted-foreground">
+                                    730 hours (1 month)
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-orange-700">
+                                    Duration:
+                                  </span>
+                                  <p className="text-muted-foreground">
+                                    5 minutes
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-orange-700">
+                                    Skill Required:
+                                  </span>
+                                  <p className="text-muted-foreground text-xs">
+                                    Competent Person (CP)
+                                  </p>
+                                </div>
+                                <div className="col-span-2">
+                                  <span className="font-medium text-orange-700">
+                                    Location:
+                                  </span>
+                                  <p className="text-muted-foreground text-xs">
+                                    Royal Infirmary - Facility
+                                  </p>
+                                </div>
+                                <div className="col-span-2">
+                                  <span className="font-medium text-orange-700">
+                                    Description:
+                                  </span>
+                                  <p className="text-muted-foreground text-xs">
+                                    Confirm inspection frequency with a risk
+                                    assessment considering environment, usage
+                                    rate, equipment condition/age...
+                                  </p>
+                                </div>
+                              </div>
+                              <p className="text-xs text-muted-foreground italic mt-2">
+                                Tasks are the actual maintenance activities
+                                performed on assets, with detailed instructions
+                                and requirements
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Summary */}
+                          <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
+                            <div className="flex items-start gap-3">
+                              <Info className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                              <div className="space-y-2">
+                                <h5 className="font-semibold text-sm">
+                                  How to Use This Hierarchy
+                                </h5>
+                                <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+                                  <li>
+                                    <strong>Select Regimes</strong> to include
+                                    all assets and tasks within that
+                                    organizational group
+                                  </li>
+                                  <li>
+                                    <strong>Select Assets</strong> to include
+                                    all maintenance tasks for that specific
+                                    equipment type
+                                  </li>
+                                  <li>
+                                    <strong>Select Tasks</strong> individually
+                                    for granular control over what gets exported
+                                  </li>
+                                  <li>
+                                    Your selections cascade down: selecting a
+                                    regime automatically selects its assets and
+                                    tasks
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
                   </CardContent>
                 </Card>
               </div>
@@ -972,13 +1724,17 @@ export function SimplifiedMappingInterface({
                           {selectedRegimes.length}
                         </div>
                         <div className="text-sm text-blue-700">Regimes</div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Top-level groupings
+                        </div>
                       </div>
                       <div className="text-center p-3 bg-green-50 rounded-lg">
                         <div className="text-2xl font-bold text-green-600">
                           {selectedSchedules.length}
                         </div>
-                        <div className="text-sm text-green-700">
-                          Schedules (Assets)
+                        <div className="text-sm text-green-700">Assets</div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Equipment types
                         </div>
                       </div>
                       <div className="text-center p-3 bg-orange-50 rounded-lg">
@@ -986,6 +1742,9 @@ export function SimplifiedMappingInterface({
                           {selectedTasks.length}
                         </div>
                         <div className="text-sm text-orange-700">Tasks</div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Maintenance activities
+                        </div>
                       </div>
                     </div>
 
@@ -1107,30 +1866,31 @@ export function SimplifiedMappingInterface({
                               </h5>
                               <div className="space-y-1 text-xs">
                                 <div>
-                                  <strong>Schedule:</strong>{" "}
+                                  <strong>Schedule - Raw Title:</strong>{" "}
                                   {item.schedule.rawTitle}
                                 </div>
                                 <div>
-                                  <strong>Task:</strong> {item.title}
+                                  <strong>Task Title:</strong> {item.title}
                                 </div>
                                 <div>
-                                  <strong>Classification:</strong>{" "}
+                                  <strong>Task Classification:</strong>{" "}
                                   {item.classification}
                                 </div>
                                 <div>
-                                  <strong>Interval:</strong>{" "}
+                                  <strong>Frequency Interval:</strong>{" "}
                                   {convertIntervalToReadable(
                                     item.intervalInHours
                                   )}
                                 </div>
                                 <div>
-                                  <strong>Location:</strong> {item.where}
+                                  <strong>Task - Where:</strong> {item.where}
                                 </div>
                                 <div>
-                                  <strong>Skill:</strong> {item.skill.Skilling}
+                                  <strong>Skill - Skilling:</strong>{" "}
+                                  {item.skill.Skilling}
                                 </div>
                                 <div>
-                                  <strong>Duration:</strong> {item.minutes}{" "}
+                                  <strong>Task Minutes:</strong> {item.minutes}{" "}
                                   minutes
                                 </div>
                               </div>
@@ -1142,15 +1902,15 @@ export function SimplifiedMappingInterface({
                               </h5>
                               <div className="space-y-1 text-xs">
                                 <div>
-                                  <strong>Asset:</strong>{" "}
+                                  <strong>Asset Type/Name:</strong>{" "}
                                   {item.schedule.rawTitle}
                                 </div>
                                 <div>
-                                  <strong>Maintenance Task:</strong>{" "}
+                                  <strong>Maintenance Task Name:</strong>{" "}
                                   {item.title}
                                 </div>
                                 <div>
-                                  <strong>Priority:</strong>{" "}
+                                  <strong>Priority Level:</strong>{" "}
                                   {item.classification === "Red"
                                     ? "High"
                                     : item.classification === "Amber"
@@ -1158,16 +1918,16 @@ export function SimplifiedMappingInterface({
                                     : "Low"}
                                 </div>
                                 <div>
-                                  <strong>Schedule:</strong> Every{" "}
+                                  <strong>Service Level:</strong> Every{" "}
                                   {convertIntervalToReadable(
                                     item.intervalInHours
                                   )}
                                 </div>
                                 <div>
-                                  <strong>Location:</strong> {item.where}
+                                  <strong>Asset Location:</strong> {item.where}
                                 </div>
                                 <div>
-                                  <strong>Technician Level:</strong>{" "}
+                                  <strong>Required Technician Level:</strong>{" "}
                                   {item.skill.Skilling}
                                 </div>
                                 <div>

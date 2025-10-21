@@ -273,6 +273,188 @@ const mockStepResults: StepResult[] = [
     ],
     tasks: [],
   },
+  {
+    regimeInfo: {
+      id: "r2Jsk98KLmZ2uQ",
+      name: "Region 2 - Regime",
+      version: "1",
+    },
+    guid: "a67d3f2a-9b44-59a1-9333-f19a742a92c1",
+    words: "green focus repair",
+    assets: [],
+    frequencies: [
+      { interval: 1, period: "Month" },
+      { interval: 6, period: "Month" },
+    ],
+    skills: mockAPISkills,
+    schedules: [
+      {
+        id: "au_r2Jsk98KLmZ2uQ!101",
+        code: "06-10-0002",
+        title:
+          "Region 2 - Regime › City Hospital - Facility - Air Handling Unit",
+        rawTitle: "Air Handling Unit",
+        version: "3",
+        modified: "2025-02-12T11:00:00Z",
+        retired: false,
+        scheduleCategories: ["SFG20 > Ventilation Systems"],
+        tasks: [
+          {
+            id: "task_biomass_001",
+            title: "Visual Inspection",
+            content:
+              "* Check for visible damage, corrosion, or leaks on boiler exterior and connections.\n* Inspect flue and ventilation systems for blockages or damage.\n* Verify all safety labels and documentation are present and legible.\n\nSmart Words: boiler visual check",
+            fullContent:
+              "Perform comprehensive visual inspection of biomass boiler system including exterior casing, pipe connections, flue system, and all associated safety equipment.",
+            fullHtmlContent:
+              "<p>Perform comprehensive visual inspection of biomass boiler system including:</p><ul><li>Exterior casing</li><li>Pipe connections</li><li>Flue system</li><li>Safety equipment</li></ul>",
+            steps: [
+              "Check for visible damage, corrosion, or leaks on boiler exterior and connections",
+              "Inspect flue and ventilation systems for blockages or damage",
+              "Verify all safety labels and documentation are present and legible",
+            ],
+            linkId: "boiler visual check",
+            url: "https://facilities-iq.com/sfg20?phrase=boiler+visual+check",
+            intervalInHours: 8760,
+            minutes: 30,
+            frequency: { interval: 1, period: "Year" },
+            skill: mockAPISkills[0],
+            schedule: {
+              id: "au_pOJgDdiFRxQ!433",
+              code: "05-38-0018",
+              title: "Biomass Boiler",
+            },
+            classification: "Amber",
+            where: "Royal Infirmary - Facility",
+            date: "2024-12-01T09:00:00Z",
+          },
+        ],
+      },
+    ],
+    tasks: [],
+  },
+  {
+    regimeInfo: {
+      id: "r3Ux9PhTsvyqL0",
+      name: "Region 3 - Regime",
+      version: "4",
+    },
+    guid: "f91bdf27-4115-5378-9b01-20aa9e78f889",
+    words: "maintain heat control",
+    assets: [],
+    frequencies: [
+      { interval: 3, period: "Month" },
+      { interval: 12, period: "Month" },
+    ],
+    skills: mockAPISkills,
+    schedules: [
+      {
+        id: "au_r3Ux9PhTsvyqL0!222",
+        code: "07-22-0015",
+        title:
+          "Region 3 - Regime › Regional Health Centre - Facility - Chilled Water Pump",
+        rawTitle: "Chilled Water Pump",
+        version: "7",
+        modified: "2025-02-13T10:30:00Z",
+        retired: false,
+        scheduleCategories: ["SFG20 > Pumps"],
+        tasks: [
+          {
+            id: "task_biomass_001",
+            title: "Visual Inspection",
+            content:
+              "* Check for visible damage, corrosion, or leaks on boiler exterior and connections.\n* Inspect flue and ventilation systems for blockages or damage.\n* Verify all safety labels and documentation are present and legible.\n\nSmart Words: boiler visual check",
+            fullContent:
+              "Perform comprehensive visual inspection of biomass boiler system including exterior casing, pipe connections, flue system, and all associated safety equipment.",
+            fullHtmlContent:
+              "<p>Perform comprehensive visual inspection of biomass boiler system including:</p><ul><li>Exterior casing</li><li>Pipe connections</li><li>Flue system</li><li>Safety equipment</li></ul>",
+            steps: [
+              "Check for visible damage, corrosion, or leaks on boiler exterior and connections",
+              "Inspect flue and ventilation systems for blockages or damage",
+              "Verify all safety labels and documentation are present and legible",
+            ],
+            linkId: "boiler visual check",
+            url: "https://facilities-iq.com/sfg20?phrase=boiler+visual+check",
+            intervalInHours: 8760,
+            minutes: 30,
+            frequency: { interval: 1, period: "Year" },
+            skill: mockAPISkills[0],
+            schedule: {
+              id: "au_pOJgDdiFRxQ!433",
+              code: "05-38-0018",
+              title: "Biomass Boiler",
+            },
+            classification: "Amber",
+            where: "Royal Infirmary - Facility",
+            date: "2024-12-01T09:00:00Z",
+          },
+        ],
+      },
+    ],
+    tasks: [],
+  },
+
+  // ===== REGION 4 =====
+  {
+    regimeInfo: {
+      id: "r4Pz01YnmBq6Rt",
+      name: "Region 4 - Regime",
+      version: "3",
+    },
+    guid: "c63aee51-b27a-5a9f-84f3-8a620e3e8c44",
+    words: "inspect flow secure",
+    assets: [],
+    frequencies: [
+      { interval: 1, period: "Month" },
+      { interval: 3, period: "Month" },
+    ],
+    skills: mockAPISkills,
+    schedules: [
+      {
+        id: "au_r4Pz01YnmBq6Rt!301",
+        code: "08-19-0021",
+        title:
+          "Region 4 - Regime › Western Campus - Facility - Fire Sprinkler System",
+        rawTitle: "Fire Sprinkler System",
+        version: "2",
+        modified: "2025-02-14T12:00:00Z",
+        retired: false,
+        scheduleCategories: ["SFG20 > Fire Safety Systems"],
+        tasks: [
+          {
+            id: "task_biomass_001",
+            title: "Visual Inspection",
+            content:
+              "* Check for visible damage, corrosion, or leaks on boiler exterior and connections.\n* Inspect flue and ventilation systems for blockages or damage.\n* Verify all safety labels and documentation are present and legible.\n\nSmart Words: boiler visual check",
+            fullContent:
+              "Perform comprehensive visual inspection of biomass boiler system including exterior casing, pipe connections, flue system, and all associated safety equipment.",
+            fullHtmlContent:
+              "<p>Perform comprehensive visual inspection of biomass boiler system including:</p><ul><li>Exterior casing</li><li>Pipe connections</li><li>Flue system</li><li>Safety equipment</li></ul>",
+            steps: [
+              "Check for visible damage, corrosion, or leaks on boiler exterior and connections",
+              "Inspect flue and ventilation systems for blockages or damage",
+              "Verify all safety labels and documentation are present and legible",
+            ],
+            linkId: "boiler visual check",
+            url: "https://facilities-iq.com/sfg20?phrase=boiler+visual+check",
+            intervalInHours: 8760,
+            minutes: 30,
+            frequency: { interval: 1, period: "Year" },
+            skill: mockAPISkills[0],
+            schedule: {
+              id: "au_pOJgDdiFRxQ!433",
+              code: "05-38-0018",
+              title: "Biomass Boiler",
+            },
+            classification: "Amber",
+            where: "Royal Infirmary - Facility",
+            date: "2024-12-01T09:00:00Z",
+          },
+        ],
+      },
+    ],
+    tasks: [],
+  },
 ];
 
 import { historyService } from "./history-service";
@@ -514,27 +696,7 @@ export function initializeDemoData(): void {
   if (typeof window === "undefined") return;
 
   // Duplicate mockStepResults 3 times to simulate multiple regimes
-  const demoRegimes = [
-    ...mockStepResults,
-    ...mockStepResults.map((r) => ({
-      ...r,
-      regimeInfo: {
-        ...r.regimeInfo,
-        id: r.regimeInfo.id + "_2",
-        name: r.regimeInfo.name + " Copy",
-      },
-      guid: r.guid + "_2",
-    })),
-    ...mockStepResults.map((r) => ({
-      ...r,
-      regimeInfo: {
-        ...r.regimeInfo,
-        id: r.regimeInfo.id + "_3",
-        name: r.regimeInfo.name + " Copy 2",
-      },
-      guid: r.guid + "_3",
-    })),
-  ];
+  const demoRegimes = mockStepResults;
 
   const demoData: SFG20Data = {
     regimes: demoRegimes,

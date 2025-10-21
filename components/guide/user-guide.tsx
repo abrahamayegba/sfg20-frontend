@@ -523,39 +523,39 @@ export function UserGuide({ onBack }: UserGuideProps) {
                                 </div>
                               </div>
                               <div className="grid grid-cols-3 gap-4 text-sm items-center">
+                                <div>Schedule - Raw Title</div>
+                                <div className="text-center text-muted-foreground">
+                                  →
+                                </div>
+                                <div>Asset Type/Name</div>
+                              </div>
+                              <div className="grid grid-cols-3 gap-4 text-sm items-center">
+                                <div>Task Title</div>
+                                <div className="text-center text-muted-foreground">
+                                  →
+                                </div>
                                 <div>Task Name</div>
-                                <div className="text-center text-muted-foreground">
-                                  →
-                                </div>
-                                <div>Job Description</div>
                               </div>
                               <div className="grid grid-cols-3 gap-4 text-sm items-center">
-                                <div>Schedule</div>
+                                <div>Task - Content</div>
                                 <div className="text-center text-muted-foreground">
                                   →
                                 </div>
-                                <div>Recurring Schedule</div>
+                                <div>Test Readings</div>
                               </div>
                               <div className="grid grid-cols-3 gap-4 text-sm items-center">
-                                <div>Asset Type</div>
+                                <div>Task - Classification</div>
                                 <div className="text-center text-muted-foreground">
                                   →
                                 </div>
-                                <div>Site Asset</div>
+                                <div>Priority Level</div>
                               </div>
                               <div className="grid grid-cols-3 gap-4 text-sm items-center">
-                                <div>Procedure</div>
+                                <div>Skill - Skilling</div>
                                 <div className="text-center text-muted-foreground">
                                   →
                                 </div>
-                                <div>Job Notes</div>
-                              </div>
-                              <div className="grid grid-cols-3 gap-4 text-sm items-center">
-                                <div>Compliance Standard</div>
-                                <div className="text-center text-muted-foreground">
-                                  →
-                                </div>
-                                <div>Compliance Reference</div>
+                                <div>Required Technician Level</div>
                               </div>
                             </div>
                           </CardContent>
