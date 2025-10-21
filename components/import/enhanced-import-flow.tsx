@@ -340,7 +340,7 @@ export function EnhancedImportFlow({
       // Simulate import process
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const success = Math.random() > 0.1; // 90% success rate for demo
+      const success = Math.random() > 0.01; // 90% success rate for demo
 
       if (success && link.regimeData) {
         totalRegimes++;

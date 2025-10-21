@@ -473,80 +473,68 @@ export const sfg20Service = {
         source: "SFG20",
       },
     });
-    // Simulate network delay for each share link
+
+    // Simulate network delay
     await new Promise((resolve) =>
       setTimeout(resolve, 2000 + shareLinks.length * 1000)
     );
 
-    const importedRegimes: StepResult[] = [];
-    for (const shareLink of shareLinks) {
-      try {
-        console.log(`Fetching regime data for share link: ${shareLink.id}`);
+    try {
+      console.log("Fetching regime data...");
 
-        const regimesForLink = mockStepResults.map((mockRegime) => ({
-          ...mockRegime,
-          regimeInfo: {
-            ...mockRegime.regimeInfo,
-            id: `${mockRegime.regimeInfo.id}_${shareLink.id}`, // unique per share link
-            name: shareLink.regimeName || mockRegime.regimeInfo.name,
-          },
-          guid: `${mockRegime.guid}_${shareLink.id}`,
-          shareLink: {
-            id: shareLink.id,
-            url: shareLink.url,
-          },
-        }));
+      // Just use the mock data directly — no duplication or mapping
+      const importedRegimes: StepResult[] = mockStepResults.map((regime) => ({
+        ...regime,
+        shareLink: shareLinks[0] || null, // attach first link if needed
+      }));
 
-        importedRegimes.push(...regimesForLink); // push all regimes
-      } catch (error) {
-        console.error(`Failed to import regime ${shareLink.id}:`, error);
+      const importedData: SFG20Data = {
+        regimes: importedRegimes,
+        totalCount: importedRegimes.length,
+        lastImported: new Date().toISOString(),
+      };
+
+      // Save for demo
+      localStorage.setItem("sfg20_data", JSON.stringify(importedData));
+
+      const history = historyService.getHistory();
+      const latestEntry = history[0];
+      if (
+        latestEntry &&
+        latestEntry.type === "import" &&
+        latestEntry.status === "in-progress"
+      ) {
+        const totalSchedules = importedRegimes.reduce(
+          (sum, regime) => sum + regime.schedules.length,
+          0
+        );
+        const totalTasks = importedRegimes.reduce(
+          (sum, regime) =>
+            sum +
+            regime.schedules.reduce(
+              (taskSum, schedule) => taskSum + schedule.tasks.length,
+              0
+            ),
+          0
+        );
+
+        historyService.updateEntry(latestEntry.id, {
+          status: "success",
+          details: {
+            regimes: importedRegimes.length,
+            schedules: totalSchedules,
+            tasks: totalTasks,
+            source: "SFG20",
+          },
+        });
       }
+
+      return importedData;
+    } catch (error) {
+      console.error("Failed to import regimes:", error);
+      throw error;
     }
-
-    const importedData: SFG20Data = {
-      regimes: importedRegimes,
-      totalCount: importedRegimes.length,
-      lastImported: new Date().toISOString(),
-    };
-
-    // Store in localStorage for demo
-    localStorage.setItem("sfg20_data", JSON.stringify(importedData));
-
-    const history = historyService.getHistory();
-    const latestEntry = history[0];
-    if (
-      latestEntry &&
-      latestEntry.type === "import" &&
-      latestEntry.status === "in-progress"
-    ) {
-      const totalSchedules = importedRegimes.reduce(
-        (sum, regime) => sum + regime.schedules.length,
-        0
-      );
-      const totalTasks = importedRegimes.reduce(
-        (sum, regime) =>
-          sum +
-          regime.schedules.reduce(
-            (taskSum, schedule) => taskSum + schedule.tasks.length,
-            0
-          ),
-        0
-      );
-
-      historyService.updateEntry(latestEntry.id, {
-        status: "success",
-        details: {
-          regimes: importedRegimes.length,
-          schedules: totalSchedules,
-          tasks: totalTasks,
-          source: "SFG20",
-        },
-      });
-    }
-
-    return importedData;
   },
-
   importData: async (
     accessToken: string,
     shareLinkId?: string
