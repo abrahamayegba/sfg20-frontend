@@ -74,7 +74,7 @@ interface SimplifiedMappingInterfaceProps {
   onContinue: () => void;
 }
 
-export function SimplifiedMappingInterface({         
+export function SimplifiedMappingInterface({  
   onBack,
   onContinue,
 }: SimplifiedMappingInterfaceProps) {
