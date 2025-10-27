@@ -7,6 +7,7 @@ import Features from "@/components/landing/features";
 import HowItWorks from "@/components/landing/how-it-works";
 import SocialProof from "@/components/landing/social-proof";
 import { useRef } from "react";
+import Partners from "@/components/landing/partners";
 
 export default function LandingPage() {
   const waitlistRef = useRef<HTMLDivElement>(null);
@@ -23,6 +24,9 @@ export default function LandingPage() {
 
       {/* How It Works */}
       <HowItWorks />
+
+      {/* Partners/Integrations Section */}
+      <Partners />
 
       {/* Social Proof */}
       <SocialProof />
