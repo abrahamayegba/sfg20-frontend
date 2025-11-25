@@ -16,7 +16,7 @@ const Features = () => {
             Everything You Need for Efficient Data Integration
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Our platform bridges the gap between SFG20 and Simpro with powerful
+            Our platform bridges the gap between SFG20 and SIMPRO with powerful
             selection tools and seamless integration.
           </p>
         </div>
@@ -49,7 +49,7 @@ const Features = () => {
               <Download className="h-10 w-10 text-accent mb-4" />
               <CardTitle>Seamless Export</CardTitle>
               <CardDescription>
-                Export selected data in Simpro-compatible format with detailed
+                Export selected data in SIMPRO-compatible format with detailed
                 preview and validation
               </CardDescription>
             </CardHeader>

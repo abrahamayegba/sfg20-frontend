@@ -29,11 +29,11 @@ const Hero = ({ waitlistRef }: HeroProps) => {
         </Badge>
         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">
           Streamline Your <span className="text-accent">SFG20</span> to{" "}
-          <span className="text-accent">Simpro</span> Workflow
+          <span className="text-accent">SIMPRO</span> Workflow
         </h1>
         <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto text-pretty">
           Import maintenance schedules from SFG20, select exactly what you need,
-          and export seamlessly to Simpro. Save hours of manual data entry with
+          and export seamlessly to SIMPRO. Save hours of manual data entry with
           our intelligent integration platform.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

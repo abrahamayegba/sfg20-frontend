@@ -1,17 +1,29 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft,
   Settings,
@@ -25,81 +37,123 @@ import {
   FileDown,
   CheckCircle,
   Info,
-} from "lucide-react"
-import { settingsService, type AppSettings } from "@/lib/settings"
-import { authService } from "@/lib/auth"
+  UserIcon,
+  Edit,
+} from "lucide-react";
+import { settingsService, type AppSettings } from "@/lib/settings";
+import { authService } from "@/lib/auth";
 
 interface SettingsInterfaceProps {
-  onBack: () => void
+  onBack: () => void;
 }
 
 export function SettingsInterface({ onBack }: SettingsInterfaceProps) {
-  const [settings, setSettings] = useState<AppSettings>(settingsService.getSettings())
-  const [hasChanges, setHasChanges] = useState(false)
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle")
-  const user = authService.getCurrentUser()
+  const [settings, setSettings] = useState<AppSettings>(
+    settingsService.getSettings()
+  );
+  const [hasChanges, setHasChanges] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+  const user = authService.getCurrentUser();
+
+  // --- DEMO PROFILE STATE (for first card) ---
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profileStatus, setProfileStatus] = useState<
+    "idle" | "saving" | "saved"
+  >("idle");
+  const [profileData, setProfileData] = useState({
+    name: user?.email ?? "Jane Doe",
+    email: user?.email ?? "jane.doe@example.com",
+  });
 
   useEffect(() => {
-    const currentSettings = settingsService.getSettings()
-    setSettings(currentSettings)
-  }, [])
+    const currentSettings = settingsService.getSettings();
+    setSettings(currentSettings);
+  }, []);
 
   const handleSettingChange = (path: string, value: any) => {
-    const keys = path.split(".")
-    const newSettings = { ...settings }
-    let current: any = newSettings
+    const keys = path.split(".");
+    const newSettings = { ...settings };
+    let current: any = newSettings;
 
     for (let i = 0; i < keys.length - 1; i++) {
-      current = current[keys[i]]
+      current = current[keys[i]];
     }
-    current[keys[keys.length - 1]] = value
+    current[keys[keys.length - 1]] = value;
 
-    setSettings(newSettings)
-    setHasChanges(true)
-    setSaveStatus("idle")
-  }
+    setSettings(newSettings);
+    setHasChanges(true);
+    setSaveStatus("idle");
+  };
 
   const handleSave = () => {
-    setSaveStatus("saving")
+    setSaveStatus("saving");
     try {
-      settingsService.updateSettings(settings)
-      setSaveStatus("saved")
-      setHasChanges(false)
-      setTimeout(() => setSaveStatus("idle"), 2000)
+      settingsService.updateSettings(settings);
+      setSaveStatus("saved");
+      setHasChanges(false);
+      setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (error) {
-      setSaveStatus("error")
+      setSaveStatus("error");
     }
-  }
+  };
 
   const handleReset = () => {
-    const defaultSettings = settingsService.resetSettings()
-    setSettings(defaultSettings)
-    setHasChanges(true)
-    setSaveStatus("idle")
-  }
+    const defaultSettings = settingsService.resetSettings();
+    setSettings(defaultSettings);
+    setHasChanges(true);
+    setSaveStatus("idle");
+  };
 
   const handleExportSettings = () => {
-    settingsService.exportSettings()
-  }
+    settingsService.exportSettings();
+  };
 
   const handleImportSettings = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const content = e.target?.result as string
-        const importedSettings = settingsService.importSettings(content)
-        setSettings(importedSettings)
-        setHasChanges(false)
-        setSaveStatus("saved")
+        const content = e.target?.result as string;
+        const importedSettings = settingsService.importSettings(content);
+        setSettings(importedSettings);
+        setHasChanges(false);
+        setSaveStatus("saved");
       } catch (error) {
-        setSaveStatus("error")
+        setSaveStatus("error");
       }
-    }
-    reader.readAsText(file)
-  }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleProfileSave = () => {
+    setProfileStatus("saving");
+    // fake async save
+    setTimeout(() => {
+      // here you could call an API to persist profileData
+      setProfileStatus("saved");
+      setIsEditingProfile(false);
+      setTimeout(() => setProfileStatus("idle"), 1500);
+    }, 700);
+  };
+
+  const handleProfileCancel = () => {
+    // reset back to user or last "saved" values
+    setProfileData({
+      name: user?.email ?? "Jane Doe",
+      email: user?.email ?? "jane.doe@example.com",
+    });
+    setIsEditingProfile(false);
+    setProfileStatus("idle");
+  };
+
+  const handleProfileEdit = () => {
+    setIsEditingProfile(true);
+    setProfileStatus("idle");
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -164,6 +218,102 @@ export function SettingsInterface({ onBack }: SettingsInterfaceProps) {
 
         <div className="space-y-8">
           {/* Account Information */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <UserIcon className="h-5 w-5" />
+                    Personal Information
+                  </CardTitle>
+                  <CardDescription>
+                    Manage your personal account details
+                  </CardDescription>
+                </div>
+                {!isEditingProfile && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleProfileEdit}
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {isEditingProfile ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name</Label>
+                      <Input
+                        id="name"
+                        value={profileData.name}
+                        onChange={(e) =>
+                          setProfileData({
+                            ...profileData,
+                            name: e.target.value,
+                          })
+                        }
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={profileData.email}
+                        onChange={(e) =>
+                          setProfileData({
+                            ...profileData,
+                            email: e.target.value,
+                          })
+                        }
+                        placeholder="Enter your email"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <Button
+                      onClick={handleProfileSave}
+                      disabled={profileStatus === "saving"}
+                    >
+                      {profileStatus === "saving"
+                        ? "Saving..."
+                        : "Save Changes"}
+                    </Button>
+                    <Button variant="outline" onClick={handleProfileCancel}>
+                      Cancel
+                    </Button>
+                    {profileStatus === "saved" && (
+                      <span className="text-xs text-green-600">
+                        Profile updated
+                      </span>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium">Full Name</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {profileData.name || "Not set"}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium">Email Address</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {profileData.email || "Not set"}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -365,7 +515,7 @@ export function SettingsInterface({ onBack }: SettingsInterfaceProps) {
           </Card>
 
           {/* Export Settings */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Download className="h-5 w-5" />
@@ -435,7 +585,7 @@ export function SettingsInterface({ onBack }: SettingsInterfaceProps) {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Sync Settings */}
           <Card>

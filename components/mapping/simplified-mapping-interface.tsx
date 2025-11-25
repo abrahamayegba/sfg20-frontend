@@ -74,7 +74,7 @@ interface SimplifiedMappingInterfaceProps {
   onContinue: () => void;
 }
 
-export function SimplifiedMappingInterface({  
+export function SimplifiedMappingInterface({
   onBack,
   onContinue,
 }: SimplifiedMappingInterfaceProps) {
@@ -693,17 +693,6 @@ export function SimplifiedMappingInterface({
 
   const templates = [
     {
-      id: "critical_only",
-      name: "Critical Only",
-      description:
-        "Import only Statutory & Mandatory (Red) and Business Critical (Amber) tasks",
-      icon: AlertCircle,
-      color: "text-red-600",
-      bgColor: "bg-red-50",
-      borderColor: "border-red-200",
-      classifications: ["Red", "Amber"],
-    },
-    {
       id: "statutory_only",
       name: "Statutory Only",
       description:
@@ -714,6 +703,7 @@ export function SimplifiedMappingInterface({
       borderColor: "border-red-200",
       classifications: ["Red"],
     },
+
     {
       id: "business_critical",
       name: "Business Critical Only",
@@ -724,6 +714,17 @@ export function SimplifiedMappingInterface({
       bgColor: "bg-yellow-50",
       borderColor: "border-yellow-200",
       classifications: ["Amber"],
+    },
+    {
+      id: "critical_only",
+      name: "Statutory & Business Critical",
+      description:
+        "Import only Statutory & Mandatory (Red) and Business Critical (Amber) tasks",
+      icon: AlertCircle,
+      color: "text-red-600",
+      bgColor: "bg-red-50",
+      borderColor: "border-red-200",
+      classifications: ["Red", "Amber"],
     },
     {
       id: "all_tasks",
@@ -758,48 +759,48 @@ export function SimplifiedMappingInterface({
       simproField: "Test Readings",
       simproDescription: "Individual checks or instructions for the task",
     },
-    {
-      sfg20Field: "Task - Classification",
-      sfg20Example: "Red / Amber / Green",
-      simproField: "Priority Level",
-      simproDescription: "Criticality of the maintenance task",
-    },
+    // {
+    //   sfg20Field: "Task - Classification",
+    //   sfg20Example: "Red / Amber / Green",
+    //   simproField: "Priority Level",
+    //   simproDescription: "Criticality of the maintenance task",
+    // },
     {
       sfg20Field: "Frequency - Interval (Hours)",
       sfg20Example: "730 hours (1 month)",
       simproField: "Service Level",
       simproDescription: "How often the task should be performed",
     },
-    {
-      sfg20Field: "Task - Where",
-      sfg20Example: "Royal Infirmary - Facility",
-      simproField: "Asset Location",
-      simproDescription: "Physical location of the asset",
-    },
+    // {
+    //   sfg20Field: "Task - Where",
+    //   sfg20Example: "Royal Infirmary - Facility",
+    //   simproField: "Asset Location",
+    //   simproDescription: "Physical location of the asset",
+    // },
     {
       sfg20Field: "Skill - Skilling",
       sfg20Example: "Competent Person (CP)",
       simproField: "Required Technician Level",
       simproDescription: "Skill level or qualification required",
     },
-    {
-      sfg20Field: "Task - Minutes",
-      sfg20Example: "5 minutes",
-      simproField: "Estimated Duration",
-      simproDescription: "Expected time to complete the task",
-    },
+    // {
+    //   sfg20Field: "Task - Minutes",
+    //   sfg20Example: "5 minutes",
+    //   simproField: "Estimated Duration",
+    //   simproDescription: "Expected time to complete the task",
+    // },
     {
       sfg20Field: "Schedule - Code",
       sfg20Example: "16-08",
       simproField: "Asset Reference Code",
       simproDescription: "Unique identifier for the asset type",
     },
-    {
-      sfg20Field: "Schedule - Schedule Categories",
-      sfg20Example: "SFG20 > Boilers/Heat Generators",
-      simproField: "Asset Category",
-      simproDescription: "Category or group of the asset",
-    },
+    // {
+    //   sfg20Field: "Schedule - Schedule Categories",
+    //   sfg20Example: "SFG20 > Boilers/Heat Generators",
+    //   simproField: "Asset Category",
+    //   simproDescription: "Category or group of the asset",
+    // },
     {
       sfg20Field: "Task - Steps",
       sfg20Example:
@@ -807,37 +808,37 @@ export function SimplifiedMappingInterface({
       simproField: "Test Readings Details",
       simproDescription: "Detailed steps for the task (part of test readings)",
     },
-    {
-      sfg20Field: "Task - Full Html Content",
-      sfg20Example: "<p>All electrical equipment that falls outside...</p>",
-      simproField: "Task Notes or Instructions",
-      simproDescription: "Full detailed instructions in HTML format",
-    },
-    {
-      sfg20Field: "Task - Url",
-      sfg20Example: "https://www.demo.facilities-iq.com/sfg20?phrase=...",
-      simproField: "Reference URL",
-      simproDescription: "External reference link for the task",
-    },
-    {
-      sfg20Field: "Schedule - Version",
-      sfg20Example: "8",
-      simproField: "Asset Version",
-      simproDescription: "Version of the asset schedule",
-    },
-    {
-      sfg20Field: "Schedule - Modified",
-      sfg20Example: "2024-01-25T15:35:43.04505Z",
-      simproField: "Last Updated Date",
-      simproDescription: "Date the schedule was last modified",
-    },
-    {
-      sfg20Field: "Schedule - Retired",
-      sfg20Example: "false",
-      simproField: "Asset Status",
-      simproDescription:
-        "Whether the asset is active or retired (active/inactive)",
-    },
+    // {
+    //   sfg20Field: "Task - Full Html Content",
+    //   sfg20Example: "<p>All electrical equipment that falls outside...</p>",
+    //   simproField: "Task Notes or Instructions",
+    //   simproDescription: "Full detailed instructions in HTML format",
+    // },
+    // {
+    //   sfg20Field: "Task - Url",
+    //   sfg20Example: "https://www.demo.facilities-iq.com/sfg20?phrase=...",
+    //   simproField: "Reference URL",
+    //   simproDescription: "External reference link for the task",
+    // },
+    // {
+    //   sfg20Field: "Schedule - Version",
+    //   sfg20Example: "8",
+    //   simproField: "Asset Version",
+    //   simproDescription: "Version of the asset schedule",
+    // },
+    // {
+    //   sfg20Field: "Schedule - Modified",
+    //   sfg20Example: "2024-01-25T15:35:43.04505Z",
+    //   simproField: "Last Updated Date",
+    //   simproDescription: "Date the schedule was last modified",
+    // },
+    // {
+    //   sfg20Field: "Schedule - Retired",
+    //   sfg20Example: "false",
+    //   simproField: "Asset Status",
+    //   simproDescription:
+    //     "Whether the asset is active or retired (active/inactive)",
+    // },
     {
       sfg20Field: "Frequency - Label",
       sfg20Example: "1M",
@@ -850,12 +851,12 @@ export function SimplifiedMappingInterface({
       simproField: "Task Order",
       simproDescription: "Order in which tasks should be performed",
     },
-    {
-      sfg20Field: "Task - FullContent",
-      sfg20Example: "All electrical equipment that falls outside...",
-      simproField: "Full Task Description",
-      simproDescription: "Plain text full description of the task",
-    },
+    // {
+    //   sfg20Field: "Task - FullContent",
+    //   sfg20Example: "All electrical equipment that falls outside...",
+    //   simproField: "Full Task Description",
+    //   simproDescription: "Plain text full description of the task",
+    // },
   ];
 
   useEffect(() => {
@@ -1091,7 +1092,7 @@ export function SimplifiedMappingInterface({
               <Info className="h-4 w-4" />
               <AlertTitle>Field Mapping is Pre-Configured</AlertTitle>
               <AlertDescription>
-                The mapping between SFG20 and Simpro fields is standardized and
+                The mapping between SFG20 and SIMPRO fields is standardized and
                 cannot be changed. This ensures data consistency and prevents
                 mapping errors.
               </AlertDescription>

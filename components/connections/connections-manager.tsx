@@ -162,7 +162,7 @@ export function ConnectionsManager({ onBack }: ConnectionsManagerProps) {
           <div>
             <h1 className="text-2xl font-bold text-foreground">Connections</h1>
             <p className="text-sm text-muted-foreground">
-              Manage your SFG20 and Simpro integrations
+              Manage your SFG20 and SIMPRO integrations
             </p>
           </div>
         </div>
@@ -299,7 +299,7 @@ export function ConnectionsManager({ onBack }: ConnectionsManagerProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building className="h-5 w-5 text-green-500" />
-              Simpro Connection
+              SIMPRO Connection
               {simproConnected ? (
                 <Badge
                   variant="default"
@@ -316,7 +316,7 @@ export function ConnectionsManager({ onBack }: ConnectionsManagerProps) {
               )}
             </CardTitle>
             <CardDescription>
-              Connect to your Simpro system to export maintenance data
+              Connect to your SIMPRO system to export maintenance data
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -383,7 +383,11 @@ export function ConnectionsManager({ onBack }: ConnectionsManagerProps) {
                   variant="destructive"
                   onClick={() => {
                     localStorage.removeItem("simpro_config");
-                    setSimproConfig({ accessToken: "", baseUrl: "", companyId: "" });
+                    setSimproConfig({
+                      accessToken: "",
+                      baseUrl: "",
+                      companyId: "",
+                    });
                     setSimproConnected(false);
                   }}
                 >

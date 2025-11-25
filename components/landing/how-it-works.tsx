@@ -9,7 +9,7 @@ const HowItWorks = () => {
             Simple 3-Step Process
           </h2>
           <p className="text-xl text-muted-foreground">
-            From SFG20 to Simpro in just a few clicks
+            From SFG20 to SIMPRO in just a few clicks
           </p>
         </div>
 
@@ -40,9 +40,9 @@ const HowItWorks = () => {
             <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-2xl font-bold text-white">3</span>
             </div>
-            <h3 className="text-xl font-semibold mb-4">Export to Simpro</h3>
+            <h3 className="text-xl font-semibold mb-4">Export to SIMPRO</h3>
             <p className="text-muted-foreground">
-              Generate Simpro-compatible files with detailed previews and export
+              Generate SIMPRO-compatible files with detailed previews and export
               your selected maintenance data instantly.
             </p>
           </div>

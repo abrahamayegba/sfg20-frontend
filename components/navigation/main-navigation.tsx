@@ -55,7 +55,7 @@ export function MainNavigation({
     {
       id: "connections",
       title: "Connections",
-      description: "Manage your SFG20 and Simpro connections",
+      description: "Manage your SFG20 and SIMPRO connections",
       icon: Link2,
       status:
         connectionStatus.sfg20 && connectionStatus.simpro
@@ -74,8 +74,8 @@ export function MainNavigation({
     },
     {
       id: "export",
-      title: "Export to Simpro",
-      description: "Send mapped data to your Simpro system",
+      title: "Export to SIMPRO",
+      description: "Send mapped data to your SIMPRO system",
       icon: Download,
       status: "pending",
       disabled: !connectionStatus.simpro,
@@ -212,7 +212,7 @@ export function MainNavigation({
                 <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
                   <div className="flex items-center gap-2">
                     <Building className="h-5 w-5 text-green-500" />
-                    <span className="font-medium">Simpro</span>
+                    <span className="font-medium">SIMPRO</span>
                   </div>
                   {getStatusBadge(
                     connectionStatus.simpro ? "connected" : "disconnected"

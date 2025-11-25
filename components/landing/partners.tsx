@@ -6,10 +6,10 @@ const Partners = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Powered by Industry Leaders
+            Our Trusted Partners
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Seamlessly integrating with the tools you already trust
+            Collaborating with industry leaders to deliver exceptional solutions
           </p>
         </div>
 
@@ -55,16 +55,16 @@ const Partners = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center gap-4 group"
-          >
+          >     
             <div className="bg-white border-2 rounded-xl p-12 group-hover:border-blue-200 transition-all group-hover:shadow-lg group-hover:scale-105 w-80 h-52 flex items-center justify-center">
               <img
-                src="simpro-logo.png"
+                src="partner-logo.png"
                 alt="Simpro"
                 className="h-32 w-auto object-contain"
               />
             </div>
             <p className="text-sm text-muted-foreground font-medium">
-              Simpro Management Software
+              SIMPRO Management Software
             </p>
           </a>
         </div>
