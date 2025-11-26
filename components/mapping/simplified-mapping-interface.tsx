@@ -1896,30 +1896,12 @@ export function SimplifiedMappingInterface({
                                   <strong>Maintenance Task Name:</strong>{" "}
                                   {item.title}
                                 </div>
-                                <div>
-                                  <strong>Priority Level:</strong>{" "}
-                                  {item.classification === "Red"
-                                    ? "High"
-                                    : item.classification === "Amber"
-                                    ? "Medium"
-                                    : "Low"}
-                                </div>
+
                                 <div>
                                   <strong>Service Level:</strong> Every{" "}
                                   {convertIntervalToReadable(
                                     item.intervalInHours
                                   )}
-                                </div>
-                                <div>
-                                  <strong>Asset Location:</strong> {item.where}
-                                </div>
-                                <div>
-                                  <strong>Required Technician Level:</strong>{" "}
-                                  {item.skill.Skilling}
-                                </div>
-                                <div>
-                                  <strong>Est. Duration:</strong> {item.minutes}{" "}
-                                  minutes
                                 </div>
                               </div>
                             </div>
