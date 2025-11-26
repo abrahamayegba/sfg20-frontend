@@ -1873,26 +1873,12 @@ export function SimplifiedMappingInterface({
                                 <div>
                                   <strong>Task Title:</strong> {item.title}
                                 </div>
-                                <div>
-                                  <strong>Task Classification:</strong>{" "}
-                                  {item.classification}
-                                </div>
+
                                 <div>
                                   <strong>Frequency Interval:</strong>{" "}
                                   {convertIntervalToReadable(
                                     item.intervalInHours
                                   )}
-                                </div>
-                                <div>
-                                  <strong>Task - Where:</strong> {item.where}
-                                </div>
-                                <div>
-                                  <strong>Skill - Skilling:</strong>{" "}
-                                  {item.skill.Skilling}
-                                </div>
-                                <div>
-                                  <strong>Task Minutes:</strong> {item.minutes}{" "}
-                                  minutes
                                 </div>
                               </div>
                             </div>
