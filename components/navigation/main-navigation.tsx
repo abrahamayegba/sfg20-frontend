@@ -154,12 +154,19 @@ export function MainNavigation({
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-3">
-              <Image
+              {/* <Image
                 src="/ignite-logo.png"
                 alt="Ignite Consultancy Services"
                 width={180}
                 height={60}
                 className="h-[50px] w-auto"
+              /> */}
+              <Image
+                src="/ignite-logo2.png"
+                alt="Ignite Consultancy Services"
+                width={200}
+                height={80}
+                className="h-[60px] w-auto"
               />
             </div>
             <p className="text-sm text-muted-foreground">

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface LoadingScreenProps {
   message?: string;
   fullScreen?: boolean;
@@ -14,17 +16,24 @@ export default function LoadingScreen({
   return (
     <div className={containerClasses}>
       <div className="text-center">
-        <div className="mb-6">
-          <img
+        <div className="mb-4">
+          {/* <img
             src="/ignite-logo.png"
             height={40}
             width={160}
             alt="Virtual Water Services"
             className="mx-auto mb-4"
+          /> */}
+          <Image
+            src="/ignite-logo2.png"
+            alt="Ignite Consultancy Services"
+            width={200}
+            height={80}
+            className="h-[80px] w-auto mx-auto mb-3"
           />
           <div className="flex items-center justify-center space-x-2">
             <span className="text-xl font-semibold text-gray-900">
-              Ignite Consultancy Services
+              Ignite Technology
             </span>
           </div>
         </div>

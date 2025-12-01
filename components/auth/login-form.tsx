@@ -57,12 +57,19 @@ export function LoginForm({ onSuccess, onToggleMode }: LoginFormProps) {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
         <div className="flex items-center justify-center gap-3">
-          <Image
+          {/* <Image
             src="/ignite-logo.png"
             alt="Ignite Consultancy Services"
             width={180}
             height={60}
             className="h-[50px] w-auto"
+          /> */}
+          <Image
+            src="/ignite-logo2.png"
+            alt="Ignite Consultancy Services"
+            width={200}
+            height={80}
+            className="h-[60px] w-auto"
           />
         </div>
         <CardTitle className="text-2xl font-bold">
